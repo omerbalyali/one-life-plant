@@ -154,7 +154,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Rubber Plant',
     scientificName: 'Ficus elastica',
     match: 87,
-    image: 'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/993018/pexels-photo-993018.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Glossy burgundy leaves', 'Easy care tree form', 'Grows tall and stately', 'Classic houseplant'],
     description: 'A classic houseplant with thick, glossy leaves that grows into an impressive indoor tree.',
     location: 'indoor',
