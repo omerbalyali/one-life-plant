@@ -409,7 +409,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               onMouseLeave={card.zIndex === 10 && !isProcessing ? handleMouseUp : undefined}
             >
               <div className="bg-white rounded-3xl shadow-2xl overflow-hidden h-full border border-gray-100 select-none">
-                <div className="relative h-2/3">
+                <div className="relative h-[58%]">
                   <img
                     src={card.plant.image}
                     alt={card.plant.name}
@@ -453,9 +453,9 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                   )}
                 </div>
                 
-                <div className="p-6 h-1/3 flex flex-col justify-between select-none">
+                <div className="p-6 h-[42%] flex flex-col justify-between select-none">
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-1 select-none">{card.plant.name}</h3>
+                    <h3 className="text-2xl font-bold text-gray-800 mb-0.5 select-none">{card.plant.name}</h3>
                     <p className="text-gray-500 italic mb-3 select-none">{card.plant.scientificName}</p>
                     <p className="text-gray-600 text-sm mb-4 select-none">{card.plant.description}</p>
                   </div>
