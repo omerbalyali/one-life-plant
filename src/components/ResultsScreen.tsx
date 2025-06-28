@@ -14,6 +14,7 @@ interface CardState {
   animationType: 'swipe-left' | 'swipe-right' | 'none';
   transform: string;
   opacity: number;
+  isCurrentCard: boolean; // Add explicit current card flag
 }
 
 // Get quiz answers from localStorage or context
@@ -170,7 +171,8 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
         isAnimating: false,
         animationType: 'none' as const,
         transform: `scale(${1 - index * 0.05}) translateY(${index * 10}px)`,
-        opacity: index < 3 ? 1 : 0
+        opacity: index < 3 ? 1 : 0,
+        isCurrentCard: index === 0 // First card is current
       }));
       setCards(initialCards);
     }
@@ -180,8 +182,13 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     setCards(prevCards => {
       return prevCards.map((card, index) => {
         const stackIndex = index - currentIndex;
+        const isCurrentCard = stackIndex === 0 && !card.isAnimating;
+        
         if (stackIndex < 0 || card.isAnimating) {
-          return card;
+          return {
+            ...card,
+            isCurrentCard: false
+          };
         } else if (stackIndex === 0) {
           return {
             ...card,
@@ -189,7 +196,8 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
             transform: isDragging 
               ? `translateX(${dragOffset.x}px) translateY(${dragOffset.y}px) rotate(${dragOffset.x * 0.1}deg)`
               : 'scale(1) translateY(0px)',
-            opacity: 1
+            opacity: 1,
+            isCurrentCard: true
           };
         } else {
           const scale = 1 - Math.min(stackIndex, 3) * 0.05;
@@ -199,7 +207,8 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
             ...card,
             zIndex: 10 - stackIndex,
             transform: `scale(${scale}) translateY(${translateY}px)`,
-            opacity
+            opacity,
+            isCurrentCard: false
           };
         }
       });
@@ -259,7 +268,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     }
 
     const direction = action === 'select' ? 'right' : 'left';
-    const currentCard = cards[currentIndex];
+    const currentCard = cards.find(card => card.isCurrentCard);
     if (!currentCard) return;
 
     setCards(prevCards => 
@@ -272,7 +281,8 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               transform: direction === 'left' 
                 ? 'translateX(-150vw) rotate(-30deg)' 
                 : 'translateX(150vw) rotate(30deg)',
-              opacity: 0
+              opacity: 0,
+              isCurrentCard: false
             }
           : card
       )
@@ -312,7 +322,8 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
         isAnimating: false,
         animationType: 'none' as const,
         transform: `scale(${1 - index * 0.05}) translateY(${index * 10}px)`,
-        opacity: index < 3 ? 1 : 0
+        opacity: index < 3 ? 1 : 0,
+        isCurrentCard: index === 0
       }));
       setCards(initialCards);
     } else {
@@ -475,11 +486,11 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               className={`absolute inset-0 select-none ${
                 card.isAnimating 
                   ? 'transition-all duration-[900ms] ease-out' 
-                  : isDragging && card.zIndex === 10 
+                  : isDragging && card.isCurrentCard 
                     ? 'transition-none' 
                     : 'transition-all duration-300 ease-out'
               } ${
-                card.zIndex === 10 && !card.isAnimating && !isProcessing ? 'cursor-grab active:cursor-grabbing' : ''
+                card.isCurrentCard && !card.isAnimating && !isProcessing ? 'cursor-grab active:cursor-grabbing' : ''
               }`}
               style={{
                 transform: card.transform,
@@ -490,10 +501,10 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                 MozUserSelect: 'none',
                 msUserSelect: 'none'
               }}
-              onMouseDown={card.zIndex === 10 && !isProcessing ? handleMouseDown : undefined}
-              onMouseMove={card.zIndex === 10 && !isProcessing ? handleMouseMove : undefined}
-              onMouseUp={card.zIndex === 10 && !isProcessing ? handleMouseUp : undefined}
-              onMouseLeave={card.zIndex === 10 && !isProcessing ? handleMouseUp : undefined}
+              onMouseDown={card.isCurrentCard && !isProcessing ? handleMouseDown : undefined}
+              onMouseMove={card.isCurrentCard && !isProcessing ? handleMouseMove : undefined}
+              onMouseUp={card.isCurrentCard && !isProcessing ? handleMouseUp : undefined}
+              onMouseLeave={card.isCurrentCard && !isProcessing ? handleMouseUp : undefined}
             >
               <div className="bg-white rounded-3xl shadow-2xl overflow-hidden h-full border border-gray-100 select-none">
                 <div className="relative h-[58%]">
@@ -515,7 +526,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                     <span className="text-purple-600 font-bold text-lg">{card.plant.match}%</span>
                   </div>
                   
-                  {card.zIndex === 10 && isDragging && !isProcessing && (
+                  {card.isCurrentCard && isDragging && !isProcessing && (
                     <>
                       <div 
                         className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 pointer-events-none select-none ${
@@ -589,3 +600,4 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     </div>
   );
 };
+</action>
