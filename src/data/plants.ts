@@ -469,7 +469,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Laceleaf',
     scientificName: 'Anthurium andraeanum',
     match: 84,
-    image: 'https://images.pexels.com/photos/6208071/pexels-photo-6208071.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/19821624/pexels-photo-19821624.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Glossy red heart flowers', 'Long-lasting blooms', 'Tropical elegance', 'Air purifying'],
     description: 'An elegant tropical plant with glossy, heart-shaped red flowers that bloom year-round.',
     location: 'indoor',
