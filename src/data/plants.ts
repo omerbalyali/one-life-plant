@@ -360,6 +360,27 @@ export const plantsDatabase: Plant[] = [
     flowering: false
   },
   {
+    id: '17',
+    name: 'Girl Scout Cookies',
+    scientificName: 'Cannabis sativa',
+    match: 96,
+    image: 'https://images.pexels.com/photos/7667726/pexels-photo-7667726.jpeg?auto=compress&cs=tinysrgb&w=600',
+    reasons: ['Premium therapeutic strain', 'Beautiful purple-green buds', 'Relaxing evening companion', 'Award-winning genetics'],
+    description: 'A legendary hybrid strain known for its sweet, earthy aroma and balanced effects. Perfect for relaxation and creativity.',
+    location: 'both',
+    lighting: 'bright',
+    maintenance: 'medium',
+    petSafe: false,
+    styles: ['modern', 'cottage', 'tropical'],
+    watering: 'medium',
+    humidity: 'medium',
+    temperature: 'warm',
+    growth: 'fast',
+    size: 'medium',
+    airPurifying: true,
+    flowering: true
+  },
+  {
     id: '18',
     name: 'Echeveria',
     scientificName: 'Echeveria elegans',
