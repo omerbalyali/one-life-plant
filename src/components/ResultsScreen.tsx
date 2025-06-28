@@ -388,6 +388,38 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     return tips;
   };
 
+  // Decorative pots data
+  const decorativePots = [
+    {
+      id: 1,
+      name: 'Modern Ceramic',
+      image: 'https://images.pexels.com/photos/6208084/pexels-photo-6208084.jpeg?auto=compress&cs=tinysrgb&w=300',
+      price: '€24.99',
+      style: 'Minimalist white ceramic with drainage'
+    },
+    {
+      id: 2,
+      name: 'Terracotta Classic',
+      image: 'https://images.pexels.com/photos/4503821/pexels-photo-4503821.jpeg?auto=compress&cs=tinysrgb&w=300',
+      price: '€18.99',
+      style: 'Traditional clay pot with saucer'
+    },
+    {
+      id: 3,
+      name: 'Woven Basket',
+      image: 'https://images.pexels.com/photos/6208075/pexels-photo-6208075.jpeg?auto=compress&cs=tinysrgb&w=300',
+      price: '€32.99',
+      style: 'Natural seagrass with plastic liner'
+    },
+    {
+      id: 4,
+      name: 'Geometric Stone',
+      image: 'https://images.pexels.com/photos/4503819/pexels-photo-4503819.jpeg?auto=compress&cs=tinysrgb&w=300',
+      price: '€45.99',
+      style: 'Modern concrete with geometric pattern'
+    }
+  ];
+
   if (showFinalSelection) {
     // Sort selected plants by match percentage (highest first)
     const sortedSelectedPlants = [...selectedPlants].sort((a, b) => b.match - a.match);
@@ -514,19 +546,63 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                     <div className="space-y-3">
                       <button className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-3 px-4 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 flex items-center justify-center gap-2">
                         <ShoppingCart className="w-4 h-4" />
-                        Buy on Amazon - $29.99
+                        Bauhaus - €29.99
                       </button>
                       
                       <button className="w-full bg-white border-2 border-emerald-500 text-emerald-600 font-semibold py-3 px-4 rounded-xl hover:bg-emerald-50 transition-all duration-300 flex items-center justify-center gap-2">
                         <ExternalLink className="w-4 h-4" />
-                        Home Depot - $27.99
+                        Pflanz Kölle - €27.99
                       </button>
                       
                       <button className="w-full bg-white border-2 border-orange-500 text-orange-600 font-semibold py-3 px-4 rounded-xl hover:bg-orange-50 transition-all duration-300 flex items-center justify-center gap-2">
                         <ExternalLink className="w-4 h-4" />
-                        Local Nursery - $32.99
+                        OBI - €32.99
                       </button>
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Decorative Pots Section */}
+              {bestMatch && (
+                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
+                      <Leaf className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800">Perfect Pots for {bestMatch.name}</h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {decorativePots.map((pot) => (
+                      <div key={pot.id} className="group cursor-pointer">
+                        <div className="bg-gray-50 rounded-xl p-3 hover:bg-gray-100 transition-all duration-300 group-hover:shadow-md">
+                          <img
+                            src={pot.image}
+                            alt={pot.name}
+                            className="w-full h-24 object-cover rounded-lg mb-3"
+                          />
+                          <h4 className="font-semibold text-gray-800 text-sm mb-1">{pot.name}</h4>
+                          <p className="text-xs text-gray-600 mb-2">{pot.style}</p>
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-purple-600">{pot.price}</span>
+                            <button className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-full hover:bg-purple-200 transition-colors">
+                              Add
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-6 text-center">
+                    <p className="text-sm text-gray-500 mb-3">
+                      Choose the perfect pot to complement your {bestMatch.name}
+                    </p>
+                    <button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 flex items-center justify-center gap-2 mx-auto">
+                      <ShoppingCart className="w-4 h-4" />
+                      View All Pots at Bauhaus
+                    </button>
                   </div>
                 </div>
               )}
