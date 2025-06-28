@@ -319,7 +319,7 @@ export const plantsDatabase: Plant[] = [
   },
   {
     id: '15',
-    name: 'Dracaena Marginata',
+    name: 'Dragon Tree',
     scientificName: 'Dracaena marginata',
     match: 85,
     image: 'https://images.pexels.com/photos/6208078/pexels-photo-6208078.jpeg?auto=compress&cs=tinysrgb&w=600',
