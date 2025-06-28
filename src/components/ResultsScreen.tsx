@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Leaf, RefreshCw, Share2, Check, X, Heart } from 'lucide-react';
+import { Leaf, RefreshCw, Share2, Check, X, Heart, ArrowLeft } from 'lucide-react';
 
 interface ResultsScreenProps {
   onRestart: () => void;
@@ -128,6 +128,21 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     }
   };
 
+  const backToSwiping = () => {
+    setShowFinalSelection(false);
+    // Reset to first unprocessed card or start over if all cards were processed
+    const processedCards = selectedPlants.length + rejectedPlants.length;
+    if (processedCards >= plants.length) {
+      // All cards were processed, reset everything
+      setCurrentIndex(0);
+      setSelectedPlants([]);
+      setRejectedPlants([]);
+    } else {
+      // Go back to where we left off
+      setCurrentIndex(processedCards);
+    }
+  };
+
   const rotation = isDragging ? dragOffset.x * 0.1 : 0;
   const opacity = isDragging ? Math.max(0.7, 1 - Math.abs(dragOffset.x) / 300) : 1;
 
@@ -200,6 +215,14 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
           )}
 
           <div className="space-y-4">
+            <button
+              onClick={backToSwiping}
+              className="w-full bg-white text-purple-600 font-semibold py-4 px-8 rounded-2xl border-2 border-purple-600 hover:bg-purple-50 transition-all duration-300 flex items-center justify-center gap-2"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              Back to Plant Selection
+            </button>
+            
             <button
               onClick={onRestart}
               className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-4 px-8 rounded-2xl hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-purple-200 flex items-center justify-center gap-2"
