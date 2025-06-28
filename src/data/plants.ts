@@ -361,7 +361,7 @@ export const plantsDatabase: Plant[] = [
   },
   {
     id: '17',
-    name: 'Girl Scout Cookies',
+    name: 'Amnesia Haze',
     scientificName: 'Cannabis sativa',
     match: 96,
     image: 'https://images.pexels.com/photos/606506/pexels-photo-606506.jpeg?auto=compress&cs=tinysrgb&w=600',
