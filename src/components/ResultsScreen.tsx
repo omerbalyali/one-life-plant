@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Leaf, RefreshCw, Share2, Check, X, Heart, ArrowLeft } from 'lucide-react';
+import { Leaf, RefreshCw, Check, X, Heart, ArrowLeft, Star } from 'lucide-react';
 import { Plant, plantsDatabase } from '../data/plants';
 
 interface ResultsScreenProps {
@@ -334,6 +334,11 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   };
 
   if (showFinalSelection) {
+    // Sort selected plants by match percentage (highest first)
+    const sortedSelectedPlants = [...selectedPlants].sort((a, b) => b.match - a.match);
+    const bestMatch = sortedSelectedPlants[0];
+    const otherMatches = sortedSelectedPlants.slice(1);
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4">
         <div className="max-w-2xl mx-auto py-8">
@@ -342,7 +347,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               <Heart className="w-16 h-16 text-purple-600" />
             </div>
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              Your Selected Plants!
+              Your Plant Matches!
             </h1>
             <p className="text-gray-600">
               {selectedPlants.length > 0 
@@ -353,44 +358,101 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
           </div>
 
           {selectedPlants.length > 0 ? (
-            <div className="space-y-6 mb-8">
-              {selectedPlants.map((plant) => (
-                <div
-                  key={plant.id}
-                  className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
-                >
-                  <div className="flex gap-4">
-                    <img
-                      src={plant.image}
-                      alt={plant.name}
-                      className="w-20 h-20 rounded-xl object-cover"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h3 className="text-xl font-bold text-gray-800">{plant.name}</h3>
-                          <p className="text-sm text-gray-500 italic">{plant.scientificName}</p>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-2xl font-bold text-purple-600">{plant.match}%</div>
-                          <div className="text-xs text-gray-500">match</div>
-                        </div>
+            <div className="space-y-8 mb-8">
+              {/* Best Match - Featured Card */}
+              {bestMatch && (
+                <div className="relative">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                    <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
+                      <Star className="w-4 h-4 fill-current" />
+                      <span className="font-bold text-sm">Best Match</span>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-white rounded-3xl p-8 shadow-2xl border-2 border-purple-200">
+                    <div className="flex flex-col md:flex-row gap-6">
+                      <div className="md:w-1/3">
+                        <img
+                          src={bestMatch.image}
+                          alt={bestMatch.name}
+                          className="w-full h-48 md:h-full rounded-2xl object-cover"
+                        />
                       </div>
-                      <p className="text-gray-600 text-sm mb-3">{plant.description}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {plant.reasons.map((reason) => (
-                          <span
-                            key={reason}
-                            className="px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full"
-                          >
-                            {reason}
-                          </span>
-                        ))}
+                      <div className="md:w-2/3">
+                        <div className="flex items-start justify-between mb-4">
+                          <div>
+                            <h2 className="text-3xl font-bold text-gray-800 mb-1">{bestMatch.name}</h2>
+                            <p className="text-lg text-gray-500 italic">{bestMatch.scientificName}</p>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-4xl font-bold text-purple-600">{bestMatch.match}%</div>
+                            <div className="text-sm text-gray-500">match</div>
+                          </div>
+                        </div>
+                        <p className="text-gray-700 text-lg mb-6 leading-relaxed">{bestMatch.description}</p>
+                        <div className="flex flex-wrap gap-3">
+                          {bestMatch.reasons.map((reason) => (
+                            <span
+                              key={reason}
+                              className="px-4 py-2 bg-purple-100 text-purple-700 text-sm rounded-full font-medium"
+                            >
+                              {reason}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              ))}
+              )}
+
+              {/* Other Matches */}
+              {otherMatches.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">
+                    Other Great Matches
+                  </h3>
+                  <div className="space-y-4">
+                    {otherMatches.map((plant) => (
+                      <div
+                        key={plant.id}
+                        className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
+                      >
+                        <div className="flex gap-4">
+                          <img
+                            src={plant.image}
+                            alt={plant.name}
+                            className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
+                          />
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between mb-2">
+                              <div>
+                                <h4 className="text-xl font-bold text-gray-800">{plant.name}</h4>
+                                <p className="text-sm text-gray-500 italic">{plant.scientificName}</p>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-2xl font-bold text-purple-600">{plant.match}%</div>
+                                <div className="text-xs text-gray-500">match</div>
+                              </div>
+                            </div>
+                            <p className="text-gray-600 text-sm mb-3">{plant.description}</p>
+                            <div className="flex flex-wrap gap-2">
+                              {plant.reasons.slice(0, 3).map((reason) => (
+                                <span
+                                  key={reason}
+                                  className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full"
+                                >
+                                  {reason}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="text-center py-12">
@@ -417,13 +479,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               <RefreshCw className="w-5 h-5" />
               Take Quiz Again
             </button>
-            
-            {selectedPlants.length > 0 && (
-              <button className="w-full bg-white text-purple-600 font-semibold py-4 px-8 rounded-2xl border-2 border-purple-600 hover:bg-purple-50 transition-all duration-300 flex items-center justify-center gap-2">
-                <Share2 className="w-5 h-5" />
-                Share My Plants
-              </button>
-            )}
           </div>
         </div>
       </div>
