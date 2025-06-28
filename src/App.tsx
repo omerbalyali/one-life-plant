@@ -35,6 +35,16 @@ function App() {
   }
 
   const selectedAnswers = quizState.answers[currentQuestion.id] || (currentQuestion.type === 'multiple' ? [] : '');
+  const progress = ((quizState.currentStep + 1) / totalSteps) * 100;
+  
+  // Calculate selection count for multiple choice questions
+  const getSelectionInfo = () => {
+    if (currentQuestion.type === 'multiple') {
+      const selectedCount = Array.isArray(selectedAnswers) ? selectedAnswers.length : 0;
+      return `${selectedCount} selected`;
+    }
+    return selectedAnswers ? '1 selected' : '0 selected';
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
@@ -46,6 +56,26 @@ function App() {
       />
 
       <div className="max-w-lg mx-auto p-4 py-8">
+        {/* Progress bar moved here */}
+        <div className="mb-6">
+          <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+            <div
+              className="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all duration-500 ease-out shadow-sm"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          
+          {/* Selection info - more vivid and visible */}
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full border border-purple-200">
+              <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+              <span className="font-semibold text-sm">
+                {getSelectionInfo()}
+              </span>
+            </div>
+          </div>
+        </div>
+
         <div className="mb-8">
           <QuizQuestion
             question={currentQuestion}
