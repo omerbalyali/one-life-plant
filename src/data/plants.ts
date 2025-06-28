@@ -360,27 +360,6 @@ export const plantsDatabase: Plant[] = [
     flowering: false
   },
   {
-    id: '17',
-    name: 'Pilea Peperomioides',
-    scientificName: 'Pilea peperomioides',
-    match: 88,
-    image: 'https://images.pexels.com/photos/6208076/pexels-photo-6208076.jpeg?auto=compress&cs=tinysrgb&w=600',
-    reasons: ['Round coin-shaped leaves', 'Produces many babies', 'Modern minimalist look', 'Easy to share'],
-    description: 'The trendy "Chinese Money Plant" with perfectly round leaves and generous baby production.',
-    location: 'indoor',
-    lighting: 'medium',
-    maintenance: 'low',
-    petSafe: true,
-    styles: ['minimalist', 'modern'],
-    watering: 'medium',
-    humidity: 'medium',
-    temperature: 'moderate',
-    growth: 'medium',
-    size: 'small',
-    airPurifying: false,
-    flowering: false
-  },
-  {
     id: '18',
     name: 'Echeveria',
     scientificName: 'Echeveria elegans',
