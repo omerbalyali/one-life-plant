@@ -322,7 +322,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Dragon Tree',
     scientificName: 'Dracaena marginata',
     match: 85,
-    image: 'https://images.pexels.com/photos/6208078/pexels-photo-6208078.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/11210261/pexels-photo-11210261.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Spiky architectural form', 'Red-edged leaves', 'Grows tall and narrow', 'Low maintenance tree'],
     description: 'A striking tree-like plant with spiky leaves edged in red that grows tall and narrow.',
     location: 'indoor',
