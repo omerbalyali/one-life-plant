@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Leaf, RefreshCw, Check, X, Heart, ArrowLeft, Star, Lightbulb, ShoppingCart, Droplets, Sun, Clock, Shield, ExternalLink } from 'lucide-react';
+import { RefreshCw, Check, X, Heart, ArrowLeft, Star, Lightbulb, ShoppingCart, Droplets, Sun, Clock, Shield, ExternalLink } from 'lucide-react';
 import { Plant, plantsDatabase } from '../data/plants';
+import { Logo } from './Logo';
 
 interface ResultsScreenProps {
   onRestart: () => void;
@@ -428,8 +429,15 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     const quizAnswers = getQuizAnswers();
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4">
-        <div className="max-w-2xl mx-auto py-8">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-purple-600 to-purple-700 shadow-lg">
+          <div className="max-w-2xl mx-auto px-4 py-4">
+            <Logo className="w-10 h-10" />
+          </div>
+        </div>
+
+        <div className="max-w-2xl mx-auto p-4 py-8">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <Heart className="w-16 h-16 text-purple-600" />
@@ -494,7 +502,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                 </div>
               )}
 
-              {/* Care Tips and Care Products Cards */}
+              {/* Green Flags and Care Products Cards */}
               {bestMatch && (
                 <div className="grid md:grid-cols-2 gap-6">
                   {/* Green Flags Card */}
@@ -568,7 +576,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                 <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
-                      <Leaf className="w-5 h-5 text-amber-600" />
+                      <Logo className="w-5 h-5" showText={false} textColor="text-amber-600" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-800">Perfect Pots for {bestMatch.name}</h3>
                   </div>
@@ -660,7 +668,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
           ) : (
             <div className="text-center py-12">
               <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Leaf className="w-12 h-12 text-gray-400" />
+                <Logo className="w-12 h-12" showText={false} textColor="text-gray-400" />
               </div>
               <p className="text-gray-500 mb-6">No plants were selected during the matching process.</p>
             </div>
@@ -691,22 +699,31 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   // Show message if no plants match the criteria
   if (plants.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4 flex items-center justify-center">
-        <div className="max-w-md mx-auto text-center">
-          <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Leaf className="w-12 h-12 text-gray-400" />
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-purple-600 to-purple-700 shadow-lg">
+          <div className="max-w-md mx-auto px-4 py-4">
+            <Logo className="w-10 h-10" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">No Perfect Matches Found</h2>
-          <p className="text-gray-600 mb-8">
-            We couldn't find plants that match all your criteria. Let's try the quiz again with different preferences.
-          </p>
-          <button
-            onClick={onRestart}
-            className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-4 px-8 rounded-2xl hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-purple-200 flex items-center justify-center gap-2"
-          >
-            <RefreshCw className="w-5 h-5" />
-            Retake Quiz
-          </button>
+        </div>
+
+        <div className="p-4 flex items-center justify-center min-h-[calc(100vh-80px)]">
+          <div className="max-w-md mx-auto text-center">
+            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Logo className="w-12 h-12" showText={false} textColor="text-gray-400" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">No Perfect Matches Found</h2>
+            <p className="text-gray-600 mb-8">
+              We couldn't find plants that match all your criteria. Let's try the quiz again with different preferences.
+            </p>
+            <button
+              onClick={onRestart}
+              className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-4 px-8 rounded-2xl hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-purple-200 flex items-center justify-center gap-2"
+            >
+              <RefreshCw className="w-5 h-5" />
+              Retake Quiz
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -721,12 +738,16 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4">
-      <div className="max-w-md mx-auto py-8">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-purple-600 to-purple-700 shadow-lg">
+        <div className="max-w-md mx-auto px-4 py-4">
+          <Logo className="w-10 h-10" />
+        </div>
+      </div>
+
+      <div className="max-w-md mx-auto p-4 py-8">
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <Leaf className="w-12 h-12 text-emerald-600" />
-          </div>
           <h1 className="text-2xl font-bold text-gray-800 mb-2">
             Find Your Perfect Match
           </h1>
