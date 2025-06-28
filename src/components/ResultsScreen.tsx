@@ -522,7 +522,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                           dragOffset.x > 50 ? 'opacity-100' : 'opacity-0'
                         }`}
                       >
-                        <div className="bg-green-500 text-white px-6 py-3 rounded-2xl font-bold text-xl transform rotate-12 select-none">
+                        <div className="bg-green-500 text-white px-8 py-6 rounded-2xl font-bold text-4xl transform rotate-12 select-none">
                           LIKE
                         </div>
                       </div>
@@ -531,7 +531,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                           dragOffset.x < -50 ? 'opacity-100' : 'opacity-0'
                         }`}
                       >
-                        <div className="bg-red-500 text-white px-6 py-3 rounded-2xl font-bold text-xl transform -rotate-12 select-none">
+                        <div className="bg-red-500 text-white px-8 py-6 rounded-2xl font-bold text-4xl transform -rotate-12 select-none">
                           PASS
                         </div>
                       </div>
