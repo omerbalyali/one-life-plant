@@ -511,7 +511,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Alocasia Polly',
     scientificName: 'Alocasia amazonica',
     match: 77,
-    image: 'https://images.pexels.com/photos/6208069/pexels-photo-6208069.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/9707474/pexels-photo-9707474.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Dramatic arrow-shaped leaves', 'Metallic silver veins', 'Compact elephant ear', 'Striking contrast'],
     description: 'A dramatic plant with dark green, arrow-shaped leaves featuring striking silver veins.',
     location: 'indoor',
