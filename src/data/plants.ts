@@ -385,7 +385,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Echeveria',
     scientificName: 'Echeveria elegans',
     match: 81,
-    image: 'https://images.pexels.com/photos/579472/pexels-photo-579472.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/32686763/pexels-photo-32686763.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Perfect rosette shape', 'Blue-green coloring', 'Produces colorful flowers', 'Compact succulent'],
     description: 'A beautiful rosette succulent with blue-green leaves that produces stunning flower spikes.',
     location: 'both',
