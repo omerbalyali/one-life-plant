@@ -497,13 +497,13 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               {/* Care Tips and Care Products Cards */}
               {bestMatch && (
                 <div className="grid md:grid-cols-2 gap-6">
-                  {/* Care Tips Card */}
+                  {/* Green Flags Card */}
                   <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
                         <Lightbulb className="w-5 h-5 text-emerald-600" />
                       </div>
-                      <h3 className="text-xl font-bold text-gray-800">Care Tips</h3>
+                      <h3 className="text-xl font-bold text-gray-800">Green Flags</h3>
                     </div>
                     
                     <div className="space-y-4">
@@ -576,19 +576,21 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {decorativePots.map((pot) => (
                       <div key={pot.id} className="group cursor-pointer">
-                        <div className="bg-gray-50 rounded-xl p-3 hover:bg-gray-100 transition-all duration-300 group-hover:shadow-md">
+                        <div className="bg-gray-50 rounded-xl p-3 hover:bg-gray-100 transition-all duration-300 group-hover:shadow-md h-full flex flex-col">
                           <img
                             src={pot.image}
                             alt={pot.name}
                             className="w-full h-24 object-cover rounded-lg mb-3"
                           />
-                          <h4 className="font-semibold text-gray-800 text-sm mb-1">{pot.name}</h4>
-                          <p className="text-xs text-gray-600 mb-2">{pot.style}</p>
-                          <div className="flex items-center justify-between">
-                            <span className="font-bold text-purple-600">{pot.price}</span>
-                            <button className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-full hover:bg-purple-200 transition-colors">
-                              Add
-                            </button>
+                          <div className="flex-1 flex flex-col">
+                            <h4 className="font-semibold text-gray-800 text-sm mb-1">{pot.name}</h4>
+                            <p className="text-xs text-gray-600 mb-3 flex-1">{pot.style}</p>
+                            <div className="flex items-center justify-between mt-auto">
+                              <span className="font-bold text-purple-600">{pot.price}</span>
+                              <button className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-full hover:bg-purple-200 transition-colors">
+                                Add
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
