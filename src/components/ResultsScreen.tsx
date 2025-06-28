@@ -140,6 +140,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (currentIndex >= plants.length || isProcessing) return;
+    e.preventDefault(); // Prevent text selection
     setIsDragging(true);
     startPos.current = { x: e.clientX, y: e.clientY };
   };
@@ -384,7 +385,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
           {cards.map((card) => (
             <div
               key={card.id}
-              className={`absolute inset-0 ${
+              className={`absolute inset-0 select-none ${
                 card.isAnimating 
                   ? 'transition-all duration-[900ms] ease-out' 
                   : isDragging && card.zIndex === 10 
@@ -396,21 +397,34 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               style={{
                 transform: card.transform,
                 opacity: card.opacity,
-                zIndex: card.zIndex
+                zIndex: card.zIndex,
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+                MozUserSelect: 'none',
+                msUserSelect: 'none'
               }}
               onMouseDown={card.zIndex === 10 && !isProcessing ? handleMouseDown : undefined}
               onMouseMove={card.zIndex === 10 && !isProcessing ? handleMouseMove : undefined}
               onMouseUp={card.zIndex === 10 && !isProcessing ? handleMouseUp : undefined}
               onMouseLeave={card.zIndex === 10 && !isProcessing ? handleMouseUp : undefined}
             >
-              <div className="bg-white rounded-3xl shadow-2xl overflow-hidden h-full border border-gray-100">
+              <div className="bg-white rounded-3xl shadow-2xl overflow-hidden h-full border border-gray-100 select-none">
                 <div className="relative h-2/3">
                   <img
                     src={card.plant.image}
                     alt={card.plant.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover pointer-events-none select-none"
+                    draggable={false}
+                    style={{
+                      userSelect: 'none',
+                      WebkitUserSelect: 'none',
+                      MozUserSelect: 'none',
+                      msUserSelect: 'none',
+                      WebkitUserDrag: 'none',
+                      WebkitTouchCallout: 'none'
+                    }}
                   />
-                  <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 shadow-lg">
+                  <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 shadow-lg pointer-events-none select-none">
                     <span className="text-purple-600 font-bold text-lg">{card.plant.match}%</span>
                   </div>
                   
@@ -418,20 +432,20 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                   {card.zIndex === 10 && isDragging && !isProcessing && (
                     <>
                       <div 
-                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
+                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 pointer-events-none select-none ${
                           dragOffset.x > 50 ? 'opacity-100' : 'opacity-0'
                         }`}
                       >
-                        <div className="bg-green-500 text-white px-6 py-3 rounded-2xl font-bold text-xl transform rotate-12">
+                        <div className="bg-green-500 text-white px-6 py-3 rounded-2xl font-bold text-xl transform rotate-12 select-none">
                           LIKE
                         </div>
                       </div>
                       <div 
-                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
+                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 pointer-events-none select-none ${
                           dragOffset.x < -50 ? 'opacity-100' : 'opacity-0'
                         }`}
                       >
-                        <div className="bg-red-500 text-white px-6 py-3 rounded-2xl font-bold text-xl transform -rotate-12">
+                        <div className="bg-red-500 text-white px-6 py-3 rounded-2xl font-bold text-xl transform -rotate-12 select-none">
                           PASS
                         </div>
                       </div>
@@ -439,18 +453,18 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                   )}
                 </div>
                 
-                <div className="p-6 h-1/3 flex flex-col justify-between">
+                <div className="p-6 h-1/3 flex flex-col justify-between select-none">
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-1">{card.plant.name}</h3>
-                    <p className="text-gray-500 italic mb-3">{card.plant.scientificName}</p>
-                    <p className="text-gray-600 text-sm mb-4">{card.plant.description}</p>
+                    <h3 className="text-2xl font-bold text-gray-800 mb-1 select-none">{card.plant.name}</h3>
+                    <p className="text-gray-500 italic mb-3 select-none">{card.plant.scientificName}</p>
+                    <p className="text-gray-600 text-sm mb-4 select-none">{card.plant.description}</p>
                   </div>
                   
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 select-none">
                     {card.plant.reasons.slice(0, 3).map((reason) => (
                       <span
                         key={reason}
-                        className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full"
+                        className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full select-none"
                       >
                         {reason}
                       </span>
