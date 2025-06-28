@@ -175,7 +175,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Spider Plant',
     scientificName: 'Chlorophytum comosum',
     match: 84,
-    image: 'https://images.pexels.com/photos/6208084/pexels-photo-6208084.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/2273109/pexels-photo-2273109.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Safe for pets and kids', 'Produces baby plants', 'Excellent air purifier', 'Retro charm'],
     description: 'A pet-safe classic with arching leaves and baby plantlets that dangle like spiders.',
     location: 'indoor',
