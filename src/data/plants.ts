@@ -490,7 +490,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Haworthia',
     scientificName: 'Haworthia fasciata',
     match: 82,
-    image: 'https://images.pexels.com/photos/6208070/pexels-photo-6208070.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/1445418/pexels-photo-1445418.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Zebra-striped leaves', 'Compact rosette form', 'Extremely low maintenance', 'Perfect for desks'],
     description: 'A small succulent with distinctive white stripes that forms perfect rosettes.',
     location: 'indoor',
