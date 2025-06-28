@@ -94,7 +94,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       isAnimating: false,
       animationType: 'none' as const,
       transform: `scale(${1 - index * 0.05}) translateY(${index * 10}px)`,
-      opacity: index < 3 ? 1 - index * 0.2 : 0
+      opacity: index < 3 ? 1 : 0 // Only show first 3 cards, no transparency
     }));
     setCards(initialCards);
   }, [plants]);
@@ -107,31 +107,20 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
           // Card has been processed or is animating - don't change it
           return card;
         } else if (stackIndex === 0) {
-          // Current card
-          let opacity = 1;
-          if (isDragging) {
-            // Only reduce opacity when card is far from center (almost out of area)
-            const cardWidth = 300; // Approximate card width
-            const threshold = cardWidth * 0.7; // Start fading when 70% out of view
-            const distance = Math.abs(dragOffset.x);
-            if (distance > threshold) {
-              opacity = Math.max(0.3, 1 - (distance - threshold) / (cardWidth * 0.3));
-            }
-          }
-          
+          // Current card - always full opacity, no transparency during drag
           return {
             ...card,
             zIndex: 10,
             transform: isDragging 
               ? `translateX(${dragOffset.x}px) translateY(${dragOffset.y}px) rotate(${dragOffset.x * 0.1}deg)`
               : 'scale(1) translateY(0px)',
-            opacity
+            opacity: 1 // Always full opacity
           };
         } else {
-          // Background cards
+          // Background cards - no transparency, just scaling and positioning
           const scale = 1 - Math.min(stackIndex, 3) * 0.05;
           const translateY = Math.min(stackIndex, 3) * 10;
-          const opacity = stackIndex < 3 ? 1 - stackIndex * 0.2 : 0;
+          const opacity = stackIndex < 3 ? 1 : 0; // Either fully visible or hidden
           return {
             ...card,
             zIndex: 10 - stackIndex,
@@ -211,7 +200,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               transform: direction === 'left' 
                 ? 'translateX(-150vw) rotate(-30deg)' 
                 : 'translateX(150vw) rotate(30deg)',
-              opacity: 0
+              opacity: 0 // Only fade during exit animation
             }
           : card
       )
@@ -256,7 +245,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
         isAnimating: false,
         animationType: 'none' as const,
         transform: `scale(${1 - index * 0.05}) translateY(${index * 10}px)`,
-        opacity: index < 3 ? 1 - index * 0.2 : 0
+        opacity: index < 3 ? 1 : 0
       }));
       setCards(initialCards);
     } else {
