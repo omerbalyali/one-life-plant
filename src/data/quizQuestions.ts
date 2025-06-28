@@ -14,6 +14,17 @@ export const quizQuestions: QuizQuestion[] = [
     ]
   },
   {
+    id: 'pets',
+    title: 'Do you have pets?',
+    subtitle: 'We\'ll only recommend non-toxic plants to keep your furry friends safe',
+    icon: 'Heart',
+    type: 'single',
+    answers: [
+      { id: 'yes', label: 'Yes, I have pets', value: 'yes', icon: 'Dog' },
+      { id: 'no', label: 'No pets', value: 'no', icon: 'X' }
+    ]
+  },
+  {
     id: 'lighting',
     title: 'How much natural light is available?',
     subtitle: 'Consider the brightest spot where you\'ll place it',
@@ -24,6 +35,18 @@ export const quizQuestions: QuizQuestion[] = [
       { id: 'medium', label: 'Medium Light', value: 'medium', icon: 'Cloud' },
       { id: 'bright', label: 'Bright Light', value: 'bright', icon: 'Sun' },
       { id: 'direct', label: 'Direct Sunlight', value: 'direct', icon: 'Zap' }
+    ]
+  },
+  {
+    id: 'experience',
+    title: 'What\'s your plant experience?',
+    subtitle: 'This helps us recommend the right difficulty level',
+    icon: 'GraduationCap',
+    type: 'single',
+    answers: [
+      { id: 'beginner', label: 'Complete Beginner', value: 'beginner', icon: 'Seedling' },
+      { id: 'some', label: 'Some Experience', value: 'some', icon: 'Sprout' },
+      { id: 'experienced', label: 'Very Experienced', value: 'experienced', icon: 'TreePine' }
     ]
   },
   {
@@ -50,6 +73,34 @@ export const quizQuestions: QuizQuestion[] = [
       { id: 'desert', label: 'Desert/Succulent', value: 'desert', icon: 'Cactus' },
       { id: 'cottage', label: 'Cottage Core', value: 'cottage', icon: 'Flower' },
       { id: 'modern', label: 'Modern', value: 'modern', icon: 'Triangle' }
+    ]
+  },
+  {
+    id: 'colors',
+    title: 'Which colors inspire you?',
+    subtitle: 'This helps match your plant to your space',
+    icon: 'Paintbrush',
+    type: 'multiple',
+    answers: [
+      { id: 'green', label: 'Deep Greens', value: 'green', color: '#059669' },
+      { id: 'patterned', label: 'Patterned', value: 'patterned', color: 'linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6, #f59e0b)' },
+      { id: 'purple', label: 'Purple Tones', value: 'purple', color: '#7c3aed' },
+      { id: 'silver', label: 'Silver/Gray', value: 'silver', color: '#6b7280' },
+      { id: 'red', label: 'Red Accents', value: 'red', color: '#dc2626' }
+    ]
+  },
+  {
+    id: 'lifestyle',
+    title: 'What describes your lifestyle?',
+    subtitle: 'Choose all that apply',
+    icon: 'User',
+    type: 'multiple',
+    answers: [
+      { id: 'busy', label: 'Always Busy', value: 'busy', icon: 'Clock' },
+      { id: 'homebody', label: 'Love Being Home', value: 'homebody', icon: 'Home' },
+      { id: 'traveler', label: 'Frequent Traveler', value: 'traveler', icon: 'Plane' },
+      { id: 'social', label: 'Love Entertaining', value: 'social', icon: 'Users' },
+      { id: 'peaceful', label: 'Seek Tranquility', value: 'peaceful', icon: 'Heart' }
     ]
   }
 ];
