@@ -42,6 +42,10 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isProcessing, setIsProcessing] = useState(false);
   
+  // Animation states
+  const [showRevealAnimation, setShowRevealAnimation] = useState(false);
+  const [revealComplete, setRevealComplete] = useState(false);
+  
   const startPos = useRef({ x: 0, y: 0 });
 
   // Smart filtering function
@@ -176,6 +180,21 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       setCards(initialCards);
     }
   }, [plants]);
+
+  // Trigger reveal animation when showing final selection
+  useEffect(() => {
+    if (showFinalSelection && !revealComplete) {
+      setShowRevealAnimation(true);
+      
+      // Complete the reveal animation after the shimmer effect
+      const timer = setTimeout(() => {
+        setShowRevealAnimation(false);
+        setRevealComplete(true);
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [showFinalSelection, revealComplete]);
 
   const updateCardStack = () => {
     setCards(prevCards => {
@@ -312,6 +331,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
 
   const backToSwiping = () => {
     setShowFinalSelection(false);
+    setRevealComplete(false);
     const processedCards = selectedPlants.length + rejectedPlants.length;
     if (processedCards >= plants.length) {
       setCurrentIndex(0);
@@ -429,267 +449,313 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     const quizAnswers = getQuizAnswers();
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-purple-700 shadow-lg">
-          <div className="max-w-2xl mx-auto px-4 py-4">
-            <Logo className="w-10 h-10" />
-          </div>
-        </div>
-
-        <div className="max-w-2xl mx-auto p-4 py-8">
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <Heart className="w-16 h-16 text-purple-600" />
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 relative overflow-hidden">
+        {/* Reveal Animation Overlay */}
+        {showRevealAnimation && (
+          <div className="fixed inset-0 z-50 pointer-events-none">
+            {/* Purple shimmer effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-600/30 to-transparent transform -skew-x-12 animate-shimmer"></div>
+            
+            {/* Sparkle particles */}
+            <div className="absolute inset-0">
+              {[...Array(20)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-2 h-2 bg-purple-400 rounded-full animate-sparkle opacity-0"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 2}s`,
+                    animationDuration: `${1 + Math.random()}s`
+                  }}
+                />
+              ))}
             </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              Your Plant Matches!
-            </h1>
-            <p className="text-gray-600">
-              {selectedPlants.length > 0 
-                ? `You chose ${selectedPlants.length} perfect plant${selectedPlants.length > 1 ? 's' : ''} for your space`
-                : "No plants selected. Let's try again!"
-              }
-            </p>
+            
+            {/* Central burst effect */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-32 h-32 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse-burst opacity-60"></div>
+            </div>
+            
+            {/* Reveal text */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center animate-fade-in-up">
+                <div className="text-4xl font-bold text-purple-700 mb-2 animate-bounce-gentle">
+                  ✨ Perfect Matches Found! ✨
+                </div>
+                <div className="text-lg text-purple-600 animate-pulse">
+                  Revealing your plant soulmates...
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Main content - hidden during animation */}
+        <div className={`transition-opacity duration-1000 ${showRevealAnimation ? 'opacity-0' : 'opacity-100'}`}>
+          {/* Header */}
+          <div className="bg-gradient-to-r from-purple-600 to-purple-700 shadow-lg">
+            <div className="max-w-2xl mx-auto px-4 py-4">
+              <Logo className="w-10 h-10" />
+            </div>
           </div>
 
-          {selectedPlants.length > 0 ? (
-            <div className="space-y-8 mb-8">
-              {/* Best Match - Featured Card */}
-              {bestMatch && (
-                <div className="relative">
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                    <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg">
-                      <Star className="w-4 h-4 fill-current" />
-                      <span className="font-bold text-sm">Best Match</span>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white rounded-3xl p-8 shadow-2xl border-2 border-purple-200">
-                    <div className="flex flex-col md:flex-row gap-6">
-                      <div className="md:w-1/3">
-                        <img
-                          src={bestMatch.image}
-                          alt={bestMatch.name}
-                          className="w-full h-48 md:h-full rounded-2xl object-cover"
-                        />
-                      </div>
-                      <div className="md:w-2/3">
-                        <div className="flex items-start justify-between mb-4">
-                          <div>
-                            <h2 className="text-3xl font-bold text-gray-800 mb-1">{bestMatch.name}</h2>
-                            <p className="text-lg text-gray-500 italic">{bestMatch.scientificName}</p>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-4xl font-bold text-purple-600">{bestMatch.match}%</div>
-                            <div className="text-sm text-gray-500">match</div>
-                          </div>
-                        </div>
-                        <p className="text-gray-700 text-lg mb-6 leading-relaxed">{bestMatch.description}</p>
-                        <div className="flex flex-wrap gap-3">
-                          {bestMatch.reasons.map((reason) => (
-                            <span
-                              key={reason}
-                              className="px-4 py-2 bg-purple-100 text-purple-700 text-sm rounded-full font-medium"
-                            >
-                              {reason}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+          <div className="max-w-2xl mx-auto p-4 py-8">
+            <div className="text-center mb-8">
+              <div className="flex justify-center mb-4">
+                <Heart className="w-16 h-16 text-purple-600 animate-pulse" />
+              </div>
+              <h1 className="text-3xl font-bold text-gray-800 mb-2 animate-fade-in">
+                Your Plant Matches!
+              </h1>
+              <p className="text-gray-600 animate-fade-in-delay">
+                {selectedPlants.length > 0 
+                  ? `You chose ${selectedPlants.length} perfect plant${selectedPlants.length > 1 ? 's' : ''} for your space`
+                  : "No plants selected. Let's try again!"
+                }
+              </p>
+            </div>
 
-              {/* Green Flags and Care Products Cards */}
-              {bestMatch && (
-                <div className="grid md:grid-cols-2 gap-6">
-                  {/* Green Flags Card */}
-                  <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-                        <Lightbulb className="w-5 h-5 text-emerald-600" />
+            {selectedPlants.length > 0 ? (
+              <div className="space-y-8 mb-8">
+                {/* Best Match - Featured Card */}
+                {bestMatch && (
+                  <div className="relative animate-slide-up">
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                      <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg animate-bounce-gentle">
+                        <Star className="w-4 h-4 fill-current animate-spin-slow" />
+                        <span className="font-bold text-sm">Best Match</span>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-800">Green Flags</h3>
                     </div>
                     
-                    <div className="space-y-4">
-                      {generateCareTips(quizAnswers, bestMatch).map((tip, index) => (
-                        <div key={index} className="flex gap-3">
-                          <div className="w-8 h-8 bg-emerald-50 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <tip.icon className="w-4 h-4 text-emerald-600" />
+                    <div className="bg-white rounded-3xl p-8 shadow-2xl border-2 border-purple-200 hover:shadow-3xl transition-all duration-500">
+                      <div className="flex flex-col md:flex-row gap-6">
+                        <div className="md:w-1/3">
+                          <img
+                            src={bestMatch.image}
+                            alt={bestMatch.name}
+                            className="w-full h-48 md:h-full rounded-2xl object-cover hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                        <div className="md:w-2/3">
+                          <div className="flex items-start justify-between mb-4">
+                            <div>
+                              <h2 className="text-3xl font-bold text-gray-800 mb-1">{bestMatch.name}</h2>
+                              <p className="text-lg text-gray-500 italic">{bestMatch.scientificName}</p>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-4xl font-bold text-purple-600 animate-pulse">{bestMatch.match}%</div>
+                              <div className="text-sm text-gray-500">match</div>
+                            </div>
                           </div>
-                          <div>
-                            <h4 className="font-semibold text-gray-800 text-sm">{tip.title}</h4>
-                            <p className="text-gray-600 text-sm leading-relaxed">{tip.description}</p>
+                          <p className="text-gray-700 text-lg mb-6 leading-relaxed">{bestMatch.description}</p>
+                          <div className="flex flex-wrap gap-3">
+                            {bestMatch.reasons.map((reason, index) => (
+                              <span
+                                key={reason}
+                                className="px-4 py-2 bg-purple-100 text-purple-700 text-sm rounded-full font-medium hover:bg-purple-200 transition-colors animate-fade-in"
+                                style={{ animationDelay: `${index * 0.1}s` }}
+                              >
+                                {reason}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Green Flags and Care Products Cards */}
+                {bestMatch && (
+                  <div className="grid md:grid-cols-2 gap-6 animate-slide-up-delay">
+                    {/* Green Flags Card */}
+                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center animate-pulse">
+                          <Lightbulb className="w-5 h-5 text-emerald-600" />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-800">Green Flags</h3>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        {generateCareTips(quizAnswers, bestMatch).map((tip, index) => (
+                          <div key={index} className="flex gap-3 animate-fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
+                            <div className="w-8 h-8 bg-emerald-50 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <tip.icon className="w-4 h-4 text-emerald-600" />
+                            </div>
+                            <div>
+                              <h4 className="font-semibold text-gray-800 text-sm">{tip.title}</h4>
+                              <p className="text-gray-600 text-sm leading-relaxed">{tip.description}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Care Products Card */}
+                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center animate-pulse">
+                          <ShoppingCart className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-800">Care Products</h3>
+                      </div>
+                      
+                      <div className="mb-4">
+                        <h4 className="font-semibold text-gray-800 mb-2">Complete Care Package</h4>
+                        <p className="text-gray-600 text-sm mb-3">Everything you need to keep your plant thriving:</p>
+                        
+                        <ul className="space-y-1 text-sm text-gray-600 mb-4">
+                          <li>• Premium potting soil (2L)</li>
+                          <li>• Liquid plant fertilizer</li>
+                          <li>• Decorative ceramic pot</li>
+                          <li>• Plant care guide</li>
+                          <li>• Watering schedule stickers</li>
+                        </ul>
+                      </div>
+
+                      <div className="space-y-3">
+                        <button className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-3 px-4 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105">
+                          <ShoppingCart className="w-4 h-4" />
+                          Bauhaus - €29.99
+                        </button>
+                        
+                        <button className="w-full bg-white border-2 border-emerald-500 text-emerald-600 font-semibold py-3 px-4 rounded-xl hover:bg-emerald-50 transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105">
+                          <ExternalLink className="w-4 h-4" />
+                          Pflanz Kölle - €27.99
+                        </button>
+                        
+                        <button className="w-full bg-white border-2 border-orange-500 text-orange-600 font-semibold py-3 px-4 rounded-xl hover:bg-orange-50 transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105">
+                          <ExternalLink className="w-4 h-4" />
+                          OBI - €32.99
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Decorative Pots Section */}
+                {bestMatch && (
+                  <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 animate-slide-up-delay-2">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
+                        <Logo className="w-5 h-5" showText={false} textColor="text-amber-600" />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-800">Perfect Pots for {bestMatch.name}</h3>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {decorativePots.map((pot, index) => (
+                        <div key={pot.id} className="group cursor-pointer animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                          <div className="bg-gray-50 rounded-xl p-3 hover:bg-gray-100 transition-all duration-300 group-hover:shadow-md h-full flex flex-col hover:scale-105">
+                            <img
+                              src={pot.image}
+                              alt={pot.name}
+                              className="w-full h-24 object-cover rounded-lg mb-3"
+                            />
+                            <div className="flex-1 flex flex-col">
+                              <h4 className="font-semibold text-gray-800 text-sm mb-1">{pot.name}</h4>
+                              <p className="text-xs text-gray-600 mb-3 flex-1">{pot.style}</p>
+                              <div className="flex items-center justify-between mt-auto">
+                                <span className="font-bold text-purple-600">{pot.price}</span>
+                                <button className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-full hover:bg-purple-200 transition-colors">
+                                  Add
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="mt-6 text-center">
+                      <p className="text-sm text-gray-500 mb-3">
+                        Choose the perfect pot to complement your {bestMatch.name}
+                      </p>
+                      <button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 flex items-center justify-center gap-2 mx-auto hover:scale-105">
+                        <ShoppingCart className="w-4 h-4" />
+                        View All Pots at Bauhaus
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Other Matches */}
+                {otherMatches.length > 0 && (
+                  <div className="animate-slide-up-delay-3">
+                    <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">
+                      Other Great Matches
+                    </h3>
+                    <div className="space-y-4">
+                      {otherMatches.map((plant, index) => (
+                        <div
+                          key={plant.id}
+                          className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 animate-fade-in hover:scale-102"
+                          style={{ animationDelay: `${index * 0.1}s` }}
+                        >
+                          <div className="flex gap-4">
+                            <img
+                              src={plant.image}
+                              alt={plant.name}
+                              className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
+                            />
+                            <div className="flex-1">
+                              <div className="flex items-start justify-between mb-2">
+                                <div>
+                                  <h4 className="text-xl font-bold text-gray-800">{plant.name}</h4>
+                                  <p className="text-sm text-gray-500 italic">{plant.scientificName}</p>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-2xl font-bold text-purple-600">{plant.match}%</div>
+                                  <div className="text-xs text-gray-500">match</div>
+                                </div>
+                              </div>
+                              <p className="text-gray-600 text-sm mb-3">{plant.description}</p>
+                              <div className="flex flex-wrap gap-2">
+                                {plant.reasons.slice(0, 3).map((reason) => (
+                                  <span
+                                    key={reason}
+                                    className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full"
+                                  >
+                                    {reason}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       ))}
                     </div>
                   </div>
-
-                  {/* Care Products Card */}
-                  <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                        <ShoppingCart className="w-5 h-5 text-purple-600" />
-                      </div>
-                      <h3 className="text-xl font-bold text-gray-800">Care Products</h3>
-                    </div>
-                    
-                    <div className="mb-4">
-                      <h4 className="font-semibold text-gray-800 mb-2">Complete Care Package</h4>
-                      <p className="text-gray-600 text-sm mb-3">Everything you need to keep your plant thriving:</p>
-                      
-                      <ul className="space-y-1 text-sm text-gray-600 mb-4">
-                        <li>• Premium potting soil (2L)</li>
-                        <li>• Liquid plant fertilizer</li>
-                        <li>• Decorative ceramic pot</li>
-                        <li>• Plant care guide</li>
-                        <li>• Watering schedule stickers</li>
-                      </ul>
-                    </div>
-
-                    <div className="space-y-3">
-                      <button className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-3 px-4 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 flex items-center justify-center gap-2">
-                        <ShoppingCart className="w-4 h-4" />
-                        Bauhaus - €29.99
-                      </button>
-                      
-                      <button className="w-full bg-white border-2 border-emerald-500 text-emerald-600 font-semibold py-3 px-4 rounded-xl hover:bg-emerald-50 transition-all duration-300 flex items-center justify-center gap-2">
-                        <ExternalLink className="w-4 h-4" />
-                        Pflanz Kölle - €27.99
-                      </button>
-                      
-                      <button className="w-full bg-white border-2 border-orange-500 text-orange-600 font-semibold py-3 px-4 rounded-xl hover:bg-orange-50 transition-all duration-300 flex items-center justify-center gap-2">
-                        <ExternalLink className="w-4 h-4" />
-                        OBI - €32.99
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Decorative Pots Section */}
-              {bestMatch && (
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
-                      <Logo className="w-5 h-5" showText={false} textColor="text-amber-600" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-800">Perfect Pots for {bestMatch.name}</h3>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {decorativePots.map((pot) => (
-                      <div key={pot.id} className="group cursor-pointer">
-                        <div className="bg-gray-50 rounded-xl p-3 hover:bg-gray-100 transition-all duration-300 group-hover:shadow-md h-full flex flex-col">
-                          <img
-                            src={pot.image}
-                            alt={pot.name}
-                            className="w-full h-24 object-cover rounded-lg mb-3"
-                          />
-                          <div className="flex-1 flex flex-col">
-                            <h4 className="font-semibold text-gray-800 text-sm mb-1">{pot.name}</h4>
-                            <p className="text-xs text-gray-600 mb-3 flex-1">{pot.style}</p>
-                            <div className="flex items-center justify-between mt-auto">
-                              <span className="font-bold text-purple-600">{pot.price}</span>
-                              <button className="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-full hover:bg-purple-200 transition-colors">
-                                Add
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-500 mb-3">
-                      Choose the perfect pot to complement your {bestMatch.name}
-                    </p>
-                    <button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all duration-300 flex items-center justify-center gap-2 mx-auto">
-                      <ShoppingCart className="w-4 h-4" />
-                      View All Pots at Bauhaus
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Other Matches */}
-              {otherMatches.length > 0 && (
-                <div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">
-                    Other Great Matches
-                  </h3>
-                  <div className="space-y-4">
-                    {otherMatches.map((plant) => (
-                      <div
-                        key={plant.id}
-                        className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
-                      >
-                        <div className="flex gap-4">
-                          <img
-                            src={plant.image}
-                            alt={plant.name}
-                            className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
-                          />
-                          <div className="flex-1">
-                            <div className="flex items-start justify-between mb-2">
-                              <div>
-                                <h4 className="text-xl font-bold text-gray-800">{plant.name}</h4>
-                                <p className="text-sm text-gray-500 italic">{plant.scientificName}</p>
-                              </div>
-                              <div className="text-right">
-                                <div className="text-2xl font-bold text-purple-600">{plant.match}%</div>
-                                <div className="text-xs text-gray-500">match</div>
-                              </div>
-                            </div>
-                            <p className="text-gray-600 text-sm mb-3">{plant.description}</p>
-                            <div className="flex flex-wrap gap-2">
-                              {plant.reasons.slice(0, 3).map((reason) => (
-                                <span
-                                  key={reason}
-                                  className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full"
-                                >
-                                  {reason}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Logo className="w-12 h-12" showText={false} textColor="text-gray-400" />
+                )}
               </div>
-              <p className="text-gray-500 mb-6">No plants were selected during the matching process.</p>
-            </div>
-          )}
+            ) : (
+              <div className="text-center py-12">
+                <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Logo className="w-12 h-12" showText={false} textColor="text-gray-400" />
+                </div>
+                <p className="text-gray-500 mb-6">No plants were selected during the matching process.</p>
+              </div>
+            )}
 
-          <div className="space-y-4">
-            <button
-              onClick={backToSwiping}
-              className="w-full bg-white text-purple-600 font-semibold py-4 px-8 rounded-2xl border-2 border-purple-600 hover:bg-purple-50 transition-all duration-300 flex items-center justify-center gap-2"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Back to Plant Selection
-            </button>
-            
-            <button
-              onClick={onRestart}
-              className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-4 px-8 rounded-2xl hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-purple-200 flex items-center justify-center gap-2"
-            >
-              <RefreshCw className="w-5 h-5" />
-              Take Quiz Again
-            </button>
+            <div className="space-y-4">
+              <button
+                onClick={backToSwiping}
+                className="w-full bg-white text-purple-600 font-semibold py-4 px-8 rounded-2xl border-2 border-purple-600 hover:bg-purple-50 transition-all duration-300 flex items-center justify-center gap-2 hover:scale-105"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Back to Plant Selection
+              </button>
+              
+              <button
+                onClick={onRestart}
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-4 px-8 rounded-2xl hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-purple-200 flex items-center justify-center gap-2"
+              >
+                <RefreshCw className="w-5 h-5" />
+                Take Quiz Again
+              </button>
+            </div>
           </div>
         </div>
       </div>
