@@ -56,11 +56,11 @@ export const quizQuestions: QuizQuestion[] = [
     icon: 'Palette',
     type: 'multiple',
     answers: [
-      { id: 'minimalist', label: 'Minimalist', value: 'minimalist', icon: 'Square' },
+      { id: 'minimalist', label: 'Minimalist', value: 'minimalist', icon: 'Circle' },
       { id: 'tropical', label: 'Tropical', value: 'tropical', icon: 'Palmtree' },
-      { id: 'desert', label: 'Desert/Succulent', value: 'desert', icon: 'Cactus' },
+      { id: 'desert', label: 'Desert/Succulent', value: 'desert', icon: 'Triangle' },
       { id: 'cottage', label: 'Cottage Core', value: 'cottage', icon: 'Flower' },
-      { id: 'modern', label: 'Modern', value: 'modern', icon: 'Triangle' }
+      { id: 'modern', label: 'Modern', value: 'modern', icon: 'Square' }
     ]
   }
 ];
