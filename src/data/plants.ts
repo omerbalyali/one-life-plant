@@ -217,7 +217,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Boston Fern',
     scientificName: 'Nephrolepis exaltata',
     match: 78,
-    image: 'https://images.pexels.com/photos/6208083/pexels-photo-6208083.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/32641020/pexels-photo-32641020.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Lush feathery fronds', 'Natural humidifier', 'Perfect for bathrooms', 'Classic hanging plant'],
     description: 'A graceful fern with delicate fronds that adds a touch of forest magic to any space.',
     location: 'indoor',
