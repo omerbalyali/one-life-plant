@@ -1,102 +1,354 @@
-import React from 'react';
-import { Leaf, RefreshCw, Share2 } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Leaf, RefreshCw, Share2, Check, X, Heart } from 'lucide-react';
 
 interface ResultsScreenProps {
   onRestart: () => void;
 }
 
+interface Plant {
+  id: string;
+  name: string;
+  scientificName: string;
+  match: number;
+  image: string;
+  reasons: string[];
+  description: string;
+}
+
 export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
-  const recommendedPlants = [
+  const [plants] = useState<Plant[]>([
     {
+      id: '1',
       name: 'Snake Plant',
       scientificName: 'Sansevieria trifasciata',
       match: 95,
-      image: 'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=400',
-      reasons: ['Low maintenance', 'Low light tolerant', 'Air purifying']
+      image: 'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=600',
+      reasons: ['Low maintenance', 'Low light tolerant', 'Air purifying'],
+      description: 'Perfect for beginners, this hardy plant thrives in low light and requires minimal watering.'
     },
     {
+      id: '2',
+      name: 'Monstera Deliciosa',
+      scientificName: 'Monstera deliciosa',
+      match: 92,
+      image: 'https://images.pexels.com/photos/6208087/pexels-photo-6208087.jpeg?auto=compress&cs=tinysrgb&w=600',
+      reasons: ['Instagram worthy', 'Fast growing', 'Statement piece'],
+      description: 'A stunning tropical plant with iconic split leaves that adds drama to any space.'
+    },
+    {
+      id: '3',
       name: 'Pothos',
       scientificName: 'Epipremnum aureum',
       match: 88,
-      image: 'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=400',
-      reasons: ['Easy to care for', 'Grows in various light', 'Beautiful trailing vines']
+      image: 'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=600',
+      reasons: ['Easy to care for', 'Grows in various light', 'Beautiful trailing vines'],
+      description: 'A versatile trailing plant that looks beautiful in hanging baskets or climbing up poles.'
     },
     {
-      name: 'ZZ Plant',
-      scientificName: 'Zamioculcas zamiifolia',
+      id: '4',
+      name: 'Fiddle Leaf Fig',
+      scientificName: 'Ficus lyrata',
+      match: 85,
+      image: 'https://images.pexels.com/photos/6208088/pexels-photo-6208088.jpeg?auto=compress&cs=tinysrgb&w=600',
+      reasons: ['Architectural beauty', 'Large statement leaves', 'Modern aesthetic'],
+      description: 'A striking tree-like plant with large, violin-shaped leaves perfect for modern interiors.'
+    },
+    {
+      id: '5',
+      name: 'Peace Lily',
+      scientificName: 'Spathiphyllum wallisii',
       match: 82,
-      image: 'https://images.pexels.com/photos/6208087/pexels-photo-6208087.jpeg?auto=compress&cs=tinysrgb&w=400',
-      reasons: ['Drought tolerant', 'Low light friendly', 'Modern aesthetic']
+      image: 'https://images.pexels.com/photos/6208089/pexels-photo-6208089.jpeg?auto=compress&cs=tinysrgb&w=600',
+      reasons: ['Beautiful white flowers', 'Air purifying', 'Low light tolerant'],
+      description: 'Elegant flowering plant that blooms regularly and helps purify indoor air.'
     }
-  ];
+  ]);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedPlants, setSelectedPlants] = useState<Plant[]>([]);
+  const [rejectedPlants, setRejectedPlants] = useState<Plant[]>([]);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [showFinalSelection, setShowFinalSelection] = useState(false);
+  
+  const cardRef = useRef<HTMLDivElement>(null);
+  const startPos = useRef({ x: 0, y: 0 });
+
+  const currentPlant = plants[currentIndex];
+  const isLastCard = currentIndex >= plants.length - 1;
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    startPos.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    
+    const deltaX = e.clientX - startPos.current.x;
+    const deltaY = e.clientY - startPos.current.y;
+    setDragOffset({ x: deltaX, y: deltaY });
+  };
+
+  const handleMouseUp = () => {
+    if (!isDragging) return;
+    
+    const threshold = 100;
+    if (Math.abs(dragOffset.x) > threshold) {
+      if (dragOffset.x > 0) {
+        handleSelect();
+      } else {
+        handleReject();
+      }
+    }
+    
+    setIsDragging(false);
+    setDragOffset({ x: 0, y: 0 });
+  };
+
+  const handleSelect = () => {
+    if (currentPlant) {
+      setSelectedPlants(prev => [...prev, currentPlant]);
+      nextCard();
+    }
+  };
+
+  const handleReject = () => {
+    if (currentPlant) {
+      setRejectedPlants(prev => [...prev, currentPlant]);
+      nextCard();
+    }
+  };
+
+  const nextCard = () => {
+    if (isLastCard) {
+      setShowFinalSelection(true);
+    } else {
+      setCurrentIndex(prev => prev + 1);
+    }
+  };
+
+  const rotation = isDragging ? dragOffset.x * 0.1 : 0;
+  const opacity = isDragging ? Math.max(0.7, 1 - Math.abs(dragOffset.x) / 300) : 1;
+
+  if (showFinalSelection) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4">
+        <div className="max-w-2xl mx-auto py-8">
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <Heart className="w-16 h-16 text-purple-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              Your Selected Plants!
+            </h1>
+            <p className="text-gray-600">
+              {selectedPlants.length > 0 
+                ? `You chose ${selectedPlants.length} perfect plant${selectedPlants.length > 1 ? 's' : ''} for your space`
+                : "No plants selected. Let's try again!"
+              }
+            </p>
+          </div>
+
+          {selectedPlants.length > 0 ? (
+            <div className="space-y-6 mb-8">
+              {selectedPlants.map((plant) => (
+                <div
+                  key={plant.id}
+                  className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
+                >
+                  <div className="flex gap-4">
+                    <img
+                      src={plant.image}
+                      alt={plant.name}
+                      className="w-20 h-20 rounded-xl object-cover"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <h3 className="text-xl font-bold text-gray-800">{plant.name}</h3>
+                          <p className="text-sm text-gray-500 italic">{plant.scientificName}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-purple-600">{plant.match}%</div>
+                          <div className="text-xs text-gray-500">match</div>
+                        </div>
+                      </div>
+                      <p className="text-gray-600 text-sm mb-3">{plant.description}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {plant.reasons.map((reason) => (
+                          <span
+                            key={reason}
+                            className="px-3 py-1 bg-purple-100 text-purple-700 text-xs rounded-full"
+                          >
+                            {reason}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Leaf className="w-12 h-12 text-gray-400" />
+              </div>
+              <p className="text-gray-500 mb-6">No plants were selected during the matching process.</p>
+            </div>
+          )}
+
+          <div className="space-y-4">
+            <button
+              onClick={onRestart}
+              className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-4 px-8 rounded-2xl hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-purple-200 flex items-center justify-center gap-2"
+            >
+              <RefreshCw className="w-5 h-5" />
+              Take Quiz Again
+            </button>
+            
+            {selectedPlants.length > 0 && (
+              <button className="w-full bg-white text-purple-600 font-semibold py-4 px-8 rounded-2xl border-2 border-purple-600 hover:bg-purple-50 transition-all duration-300 flex items-center justify-center gap-2">
+                <Share2 className="w-5 h-5" />
+                Share My Plants
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!currentPlant) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4">
-      <div className="max-w-2xl mx-auto py-8">
+      <div className="max-w-md mx-auto py-8">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <Leaf className="w-16 h-16 text-emerald-600" />
+            <Leaf className="w-12 h-12 text-emerald-600" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Your Perfect Plant Matches!
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">
+            Find Your Perfect Match
           </h1>
           <p className="text-gray-600">
-            Based on your preferences, here are our top recommendations
+            Swipe right to select, left to pass
           </p>
+          <div className="mt-4 text-sm text-gray-500">
+            {currentIndex + 1} of {plants.length} • {selectedPlants.length} selected
+          </div>
         </div>
 
-        <div className="space-y-6 mb-8">
-          {recommendedPlants.map((plant, index) => (
-            <div
-              key={plant.name}
-              className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
-            >
-              <div className="flex gap-4">
+        <div className="relative h-[600px] mb-8">
+          {/* Current Card */}
+          <div
+            ref={cardRef}
+            className="absolute inset-0 cursor-grab active:cursor-grabbing"
+            style={{
+              transform: `translateX(${dragOffset.x}px) translateY(${dragOffset.y}px) rotate(${rotation}deg)`,
+              opacity,
+              zIndex: 10
+            }}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
+            <div className="bg-white rounded-3xl shadow-2xl overflow-hidden h-full border border-gray-100">
+              <div className="relative h-2/3">
                 <img
-                  src={plant.image}
-                  alt={plant.name}
-                  className="w-20 h-20 rounded-xl object-cover"
+                  src={currentPlant.image}
+                  alt={currentPlant.name}
+                  className="w-full h-full object-cover"
                 />
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-800">{plant.name}</h3>
-                      <p className="text-sm text-gray-500 italic">{plant.scientificName}</p>
+                <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 shadow-lg">
+                  <span className="text-purple-600 font-bold text-lg">{currentPlant.match}%</span>
+                </div>
+                
+                {/* Swipe indicators */}
+                {isDragging && (
+                  <>
+                    <div 
+                      className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
+                        dragOffset.x > 50 ? 'opacity-100' : 'opacity-0'
+                      }`}
+                    >
+                      <div className="bg-green-500 text-white px-6 py-3 rounded-2xl font-bold text-xl transform rotate-12">
+                        LIKE
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-emerald-600">{plant.match}%</div>
-                      <div className="text-xs text-gray-500">match</div>
+                    <div 
+                      className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
+                        dragOffset.x < -50 ? 'opacity-100' : 'opacity-0'
+                      }`}
+                    >
+                      <div className="bg-red-500 text-white px-6 py-3 rounded-2xl font-bold text-xl transform -rotate-12">
+                        PASS
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {plant.reasons.map((reason) => (
-                      <span
-                        key={reason}
-                        className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full"
-                      >
-                        {reason}
-                      </span>
-                    ))}
-                  </div>
+                  </>
+                )}
+              </div>
+              
+              <div className="p-6 h-1/3 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-1">{currentPlant.name}</h3>
+                  <p className="text-gray-500 italic mb-3">{currentPlant.scientificName}</p>
+                  <p className="text-gray-600 text-sm mb-4">{currentPlant.description}</p>
+                </div>
+                
+                <div className="flex flex-wrap gap-2">
+                  {currentPlant.reasons.slice(0, 3).map((reason) => (
+                    <span
+                      key={reason}
+                      className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full"
+                    >
+                      {reason}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Next Card Preview */}
+          {currentIndex < plants.length - 1 && (
+            <div 
+              className="absolute inset-0 bg-white rounded-3xl shadow-xl border border-gray-100"
+              style={{ 
+                zIndex: 5,
+                transform: 'scale(0.95) translateY(10px)',
+                opacity: 0.8
+              }}
+            >
+              <div className="h-2/3 bg-gray-100 rounded-t-3xl"></div>
+              <div className="p-6 h-1/3"></div>
+            </div>
+          )}
         </div>
 
-        <div className="space-y-4">
+        {/* Action Buttons */}
+        <div className="flex justify-center gap-6">
           <button
-            onClick={onRestart}
-            className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-4 px-8 rounded-2xl hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-purple-200 flex items-center justify-center gap-2"
+            onClick={handleReject}
+            className="w-16 h-16 bg-white border-4 border-red-200 rounded-full flex items-center justify-center hover:border-red-300 hover:bg-red-50 transition-all duration-300 transform hover:scale-110 shadow-lg"
           >
-            <RefreshCw className="w-5 h-5" />
-            Take Quiz Again
+            <X className="w-8 h-8 text-red-500" />
           </button>
           
-          <button className="w-full bg-white text-purple-600 font-semibold py-4 px-8 rounded-2xl border-2 border-purple-600 hover:bg-purple-50 transition-all duration-300 flex items-center justify-center gap-2">
-            <Share2 className="w-5 h-5" />
-            Share Results
+          <button
+            onClick={handleSelect}
+            className="w-16 h-16 bg-white border-4 border-green-200 rounded-full flex items-center justify-center hover:border-green-300 hover:bg-green-50 transition-all duration-300 transform hover:scale-110 shadow-lg"
+          >
+            <Check className="w-8 h-8 text-green-500" />
           </button>
+        </div>
+
+        <div className="text-center mt-6">
+          <p className="text-sm text-gray-500">
+            Tap buttons or swipe to choose
+          </p>
         </div>
       </div>
     </div>
