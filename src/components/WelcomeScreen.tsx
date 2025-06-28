@@ -31,7 +31,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
             
             <h1 className="text-4xl font-bold text-purple-800 leading-tight">
               Find Your Perfect
-              <span className="block text-purple-600 font-playwrite text-3xl mt-2">Plant Match</span>
+              <span className="block text-purple-600 text-3xl mt-2">Plant Match</span>
             </h1>
             
             <p className="text-purple-700 text-lg leading-relaxed max-w-sm mx-auto">

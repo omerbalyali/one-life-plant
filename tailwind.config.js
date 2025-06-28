@@ -2,11 +2,7 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {
-      fontFamily: {
-        'delius': ['"Delius Swash Caps"', 'cursive'],
-      },
-    },
+    extend: {},
   },
   plugins: [],
 };
