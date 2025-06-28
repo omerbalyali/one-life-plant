@@ -61,7 +61,7 @@ function App() {
             className={`
               w-full font-semibold py-4 px-8 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2
               ${canProceed
-                ? 'bg-gradient-to-r from-emerald-600 to-green-600 text-white hover:from-emerald-700 hover:to-green-700 transform hover:scale-105 shadow-lg shadow-emerald-200'
+                ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 transform hover:scale-105 shadow-lg shadow-rose-200'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
               }
             `}

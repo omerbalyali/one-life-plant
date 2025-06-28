@@ -42,7 +42,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStart }) => {
 
           <button
             onClick={onStart}
-            className="w-full bg-gradient-to-r from-emerald-600 to-green-600 text-white font-semibold py-4 px-8 rounded-2xl hover:from-emerald-700 hover:to-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-emerald-200"
+            className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-semibold py-4 px-8 rounded-2xl hover:from-rose-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-rose-200"
           >
             Start Plant Quiz
           </button>
