@@ -370,7 +370,7 @@ export const plantsDatabase: Plant[] = [
     location: 'both',
     lighting: 'bright',
     maintenance: 'medium',
-    petSafe: false,
+    petSafe: true,
     styles: ['modern', 'cottage', 'tropical'],
     watering: 'medium',
     humidity: 'medium',
