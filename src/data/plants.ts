@@ -238,7 +238,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Jade Plant',
     scientificName: 'Crassula ovata',
     match: 86,
-    image: 'https://images.pexels.com/photos/6208082/pexels-photo-6208082.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/4045620/pexels-photo-4045620.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Symbol of good luck', 'Thick succulent leaves', 'Easy to propagate', 'Grows into tree form'],
     description: 'A lucky succulent with thick, jade-green leaves that grows slowly into a beautiful tree.',
     location: 'both',
