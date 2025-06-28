@@ -448,7 +448,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Hoya Carnosa',
     scientificName: 'Hoya carnosa',
     match: 83,
-    image: 'https://images.pexels.com/photos/6208072/pexels-photo-6208072.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/9297353/pexels-photo-9297353.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Waxy star-shaped flowers', 'Thick succulent leaves', 'Sweet fragrance', 'Long trailing vines'],
     description: 'The "Wax Plant" with thick, waxy leaves and clusters of fragrant, star-shaped flowers.',
     location: 'indoor',
