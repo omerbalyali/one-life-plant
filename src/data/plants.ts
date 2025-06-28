@@ -256,10 +256,10 @@ export const plantsDatabase: Plant[] = [
   },
   {
     id: '12',
-    name: 'Philodendron Heartleaf',
+    name: 'Heartleaf Philodendron',
     scientificName: 'Philodendron hederaceum',
     match: 83,
-    image: 'https://images.pexels.com/photos/6208081/pexels-photo-6208081.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/2215534/pexels-photo-2215534.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Heart-shaped leaves', 'Trails beautifully', 'Grows in water', 'Low light tolerant'],
     description: 'A charming trailing plant with heart-shaped leaves that cascades beautifully from shelves.',
     location: 'indoor',
