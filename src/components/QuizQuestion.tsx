@@ -56,6 +56,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
             onClick={() => onAnswerSelect(answer.id)}
             type={question.type}
             icon={answer.icon}
+            color={answer.color}
           />
         ))}
       </div>

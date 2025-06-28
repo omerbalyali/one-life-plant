@@ -8,6 +8,7 @@ interface AnswerPillProps {
   onClick: () => void;
   type: 'single' | 'multiple';
   icon?: string;
+  color?: string;
 }
 
 export const AnswerPill: React.FC<AnswerPillProps> = ({
@@ -15,7 +16,8 @@ export const AnswerPill: React.FC<AnswerPillProps> = ({
   isSelected,
   onClick,
   type,
-  icon
+  icon,
+  color
 }) => {
   // Get the icon component dynamically
   const IconComponent = icon ? (Icons as any)[icon] : null;
@@ -34,7 +36,17 @@ export const AnswerPill: React.FC<AnswerPillProps> = ({
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          {IconComponent && (
+          {color ? (
+            <div className="w-8 h-8 rounded-full border-2 border-white shadow-sm overflow-hidden">
+              <div 
+                className="w-full h-full"
+                style={{ 
+                  background: color.includes('gradient') ? color : color,
+                  backgroundColor: !color.includes('gradient') ? color : undefined
+                }}
+              />
+            </div>
+          ) : IconComponent ? (
             <div className={`
               w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200
               ${isSelected
@@ -44,7 +56,7 @@ export const AnswerPill: React.FC<AnswerPillProps> = ({
             `}>
               <IconComponent className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-emerald-600'}`} />
             </div>
-          )}
+          ) : null}
           <span className="font-medium text-left">{label}</span>
         </div>
         

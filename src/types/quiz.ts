@@ -3,6 +3,7 @@ export interface QuizAnswer {
   label: string;
   value: string;
   icon?: string;
+  color?: string;
 }
 
 export interface QuizQuestion {

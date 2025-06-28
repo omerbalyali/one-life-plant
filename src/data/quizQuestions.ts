@@ -71,11 +71,11 @@ export const quizQuestions: QuizQuestion[] = [
     icon: 'Paintbrush',
     type: 'multiple',
     answers: [
-      { id: 'green', label: 'Deep Greens', value: 'green', icon: 'Leaf' },
-      { id: 'patterned', label: 'Patterned', value: 'patterned', icon: 'Sparkles' },
-      { id: 'purple', label: 'Purple Tones', value: 'purple', icon: 'Grape' },
-      { id: 'silver', label: 'Silver/Gray', value: 'silver', icon: 'Circle' },
-      { id: 'red', label: 'Red Accents', value: 'red', icon: 'Cherry' }
+      { id: 'green', label: 'Deep Greens', value: 'green', color: '#059669' },
+      { id: 'patterned', label: 'Patterned', value: 'patterned', color: 'linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6, #f59e0b)' },
+      { id: 'purple', label: 'Purple Tones', value: 'purple', color: '#7c3aed' },
+      { id: 'silver', label: 'Silver/Gray', value: 'silver', color: '#6b7280' },
+      { id: 'red', label: 'Red Accents', value: 'red', color: '#dc2626' }
     ]
   },
   {
