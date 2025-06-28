@@ -66,7 +66,7 @@ export const quizQuestions: QuizQuestion[] = [
     type: 'multiple',
     answers: [
       { id: 'green', label: 'Deep Greens', value: 'green' },
-      { id: 'variegated', label: 'Variegated', value: 'variegated' },
+      { id: 'patterned', label: 'Patterned', value: 'patterned' },
       { id: 'purple', label: 'Purple Tones', value: 'purple' },
       { id: 'silver', label: 'Silver/Gray', value: 'silver' },
       { id: 'red', label: 'Red Accents', value: 'red' }
