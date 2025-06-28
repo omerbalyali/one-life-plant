@@ -8,6 +8,7 @@ export interface QuizQuestion {
   id: string;
   title: string;
   subtitle?: string;
+  icon?: string;
   type: 'single' | 'multiple';
   answers: QuizAnswer[];
 }

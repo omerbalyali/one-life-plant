@@ -5,6 +5,7 @@ export const quizQuestions: QuizQuestion[] = [
     id: 'location',
     title: 'Where will your plant live?',
     subtitle: 'This helps us understand the environment',
+    icon: 'MapPin',
     type: 'single',
     answers: [
       { id: 'indoor', label: 'Indoor', value: 'indoor' },
@@ -16,6 +17,7 @@ export const quizQuestions: QuizQuestion[] = [
     id: 'lighting',
     title: 'How much natural light is available?',
     subtitle: 'Consider the brightest spot where you\'ll place it',
+    icon: 'Sun',
     type: 'single',
     answers: [
       { id: 'low', label: 'Low Light', value: 'low' },
@@ -28,6 +30,7 @@ export const quizQuestions: QuizQuestion[] = [
     id: 'experience',
     title: 'What\'s your plant experience?',
     subtitle: 'This helps us recommend the right difficulty level',
+    icon: 'GraduationCap',
     type: 'single',
     answers: [
       { id: 'beginner', label: 'Complete Beginner', value: 'beginner' },
@@ -39,6 +42,7 @@ export const quizQuestions: QuizQuestion[] = [
     id: 'maintenance',
     title: 'How much care can you provide?',
     subtitle: 'Be honest about your availability',
+    icon: 'Clock',
     type: 'single',
     answers: [
       { id: 'low', label: 'Low Maintenance', value: 'low' },
@@ -50,6 +54,7 @@ export const quizQuestions: QuizQuestion[] = [
     id: 'style',
     title: 'What\'s your aesthetic preference?',
     subtitle: 'Choose all that appeal to you',
+    icon: 'Palette',
     type: 'multiple',
     answers: [
       { id: 'minimalist', label: 'Minimalist', value: 'minimalist' },
@@ -63,6 +68,7 @@ export const quizQuestions: QuizQuestion[] = [
     id: 'colors',
     title: 'Which colors inspire you?',
     subtitle: 'This helps match your plant to your space',
+    icon: 'Paintbrush',
     type: 'multiple',
     answers: [
       { id: 'green', label: 'Deep Greens', value: 'green' },
@@ -76,6 +82,7 @@ export const quizQuestions: QuizQuestion[] = [
     id: 'lifestyle',
     title: 'What describes your lifestyle?',
     subtitle: 'Choose all that apply',
+    icon: 'User',
     type: 'multiple',
     answers: [
       { id: 'busy', label: 'Always Busy', value: 'busy' },
