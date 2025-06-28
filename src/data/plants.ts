@@ -280,7 +280,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Bird of Paradise',
     scientificName: 'Strelitzia reginae',
     match: 91,
-    image: 'https://images.pexels.com/photos/6208080/pexels-photo-6208080.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/59872/pexels-photo-59872.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Dramatic paddle leaves', 'Orange bird-like flowers', 'Tropical statement piece', 'Instagram favorite'],
     description: 'A dramatic tropical plant with large paddle leaves and stunning orange bird-like flowers.',
     location: 'indoor',
