@@ -13,6 +13,20 @@ interface Plant {
   image: string;
   reasons: string[];
   description: string;
+  // Quiz-based filtering fields
+  location: 'indoor' | 'outdoor' | 'both';
+  lighting: 'low' | 'medium' | 'bright' | 'direct';
+  maintenance: 'low' | 'medium' | 'high';
+  petSafe: boolean;
+  styles: string[]; // Array of style preferences this plant fits
+  // Additional plant characteristics
+  watering: 'low' | 'medium' | 'high';
+  humidity: 'low' | 'medium' | 'high';
+  temperature: 'cool' | 'moderate' | 'warm';
+  growth: 'slow' | 'medium' | 'fast';
+  size: 'small' | 'medium' | 'large';
+  airPurifying: boolean;
+  flowering: boolean;
 }
 
 interface CardState {
@@ -33,8 +47,20 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       scientificName: 'Sansevieria trifasciata',
       match: 95,
       image: 'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=600',
-      reasons: ['Low maintenance', 'Low light tolerant', 'Air purifying'],
-      description: 'Perfect for beginners, this hardy plant thrives in low light and requires minimal watering.'
+      reasons: ['Thrives in low light', 'Water once a month', 'Purifies air while you sleep', 'Pet-safe option'],
+      description: 'Perfect for beginners, this hardy plant thrives in low light and requires minimal watering.',
+      location: 'indoor',
+      lighting: 'low',
+      maintenance: 'low',
+      petSafe: true,
+      styles: ['minimalist', 'modern'],
+      watering: 'low',
+      humidity: 'low',
+      temperature: 'moderate',
+      growth: 'slow',
+      size: 'medium',
+      airPurifying: true,
+      flowering: false
     },
     {
       id: '2',
@@ -42,17 +68,41 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       scientificName: 'Monstera deliciosa',
       match: 92,
       image: 'https://images.pexels.com/photos/6208087/pexels-photo-6208087.jpeg?auto=compress&cs=tinysrgb&w=600',
-      reasons: ['Instagram worthy', 'Fast growing', 'Statement piece'],
-      description: 'A stunning tropical plant with iconic split leaves that adds drama to any space.'
+      reasons: ['Instagram-worthy split leaves', 'Fast growing statement piece', 'Climbs or trails beautifully'],
+      description: 'A stunning tropical plant with iconic split leaves that adds drama to any space.',
+      location: 'indoor',
+      lighting: 'bright',
+      maintenance: 'medium',
+      petSafe: false,
+      styles: ['tropical', 'modern'],
+      watering: 'medium',
+      humidity: 'high',
+      temperature: 'warm',
+      growth: 'fast',
+      size: 'large',
+      airPurifying: true,
+      flowering: false
     },
     {
       id: '3',
-      name: 'Pothos',
+      name: 'Golden Pothos',
       scientificName: 'Epipremnum aureum',
       match: 88,
       image: 'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=600',
-      reasons: ['Easy to care for', 'Grows in various light', 'Beautiful trailing vines'],
-      description: 'A versatile trailing plant that looks beautiful in hanging baskets or climbing up poles.'
+      reasons: ['Grows in any light condition', 'Beautiful cascading vines', 'Propagates easily in water'],
+      description: 'A versatile trailing plant that looks beautiful in hanging baskets or climbing up poles.',
+      location: 'indoor',
+      lighting: 'medium',
+      maintenance: 'low',
+      petSafe: false,
+      styles: ['cottage', 'tropical'],
+      watering: 'medium',
+      humidity: 'medium',
+      temperature: 'moderate',
+      growth: 'fast',
+      size: 'medium',
+      airPurifying: true,
+      flowering: false
     },
     {
       id: '4',
@@ -60,8 +110,20 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       scientificName: 'Ficus lyrata',
       match: 85,
       image: 'https://images.pexels.com/photos/6208088/pexels-photo-6208088.jpeg?auto=compress&cs=tinysrgb&w=600',
-      reasons: ['Architectural beauty', 'Large statement leaves', 'Modern aesthetic'],
-      description: 'A striking tree-like plant with large, violin-shaped leaves perfect for modern interiors.'
+      reasons: ['Architectural statement tree', 'Large violin-shaped leaves', 'Perfect for bright corners'],
+      description: 'A striking tree-like plant with large, violin-shaped leaves perfect for modern interiors.',
+      location: 'indoor',
+      lighting: 'bright',
+      maintenance: 'high',
+      petSafe: false,
+      styles: ['modern', 'minimalist'],
+      watering: 'medium',
+      humidity: 'medium',
+      temperature: 'warm',
+      growth: 'medium',
+      size: 'large',
+      airPurifying: false,
+      flowering: false
     },
     {
       id: '5',
@@ -69,8 +131,83 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       scientificName: 'Spathiphyllum wallisii',
       match: 82,
       image: 'https://images.pexels.com/photos/6208089/pexels-photo-6208089.jpeg?auto=compress&cs=tinysrgb&w=600',
-      reasons: ['Beautiful white flowers', 'Air purifying', 'Low light tolerant'],
-      description: 'Elegant flowering plant that blooms regularly and helps purify indoor air.'
+      reasons: ['Elegant white flowers', 'Tells you when thirsty', 'Thrives in low light', 'NASA-approved air purifier'],
+      description: 'Elegant flowering plant that blooms regularly and helps purify indoor air.',
+      location: 'indoor',
+      lighting: 'low',
+      maintenance: 'medium',
+      petSafe: false,
+      styles: ['cottage', 'minimalist'],
+      watering: 'medium',
+      humidity: 'high',
+      temperature: 'moderate',
+      growth: 'medium',
+      size: 'medium',
+      airPurifying: true,
+      flowering: true
+    },
+    {
+      id: '6',
+      name: 'ZZ Plant',
+      scientificName: 'Zamioculcas zamiifolia',
+      match: 90,
+      image: 'https://images.pexels.com/photos/6208090/pexels-photo-6208090.jpeg?auto=compress&cs=tinysrgb&w=600',
+      reasons: ['Nearly indestructible', 'Glossy architectural leaves', 'Drought tolerant', 'Perfect for offices'],
+      description: 'An ultra-low maintenance plant with glossy leaves that can survive almost any condition.',
+      location: 'indoor',
+      lighting: 'low',
+      maintenance: 'low',
+      petSafe: false,
+      styles: ['modern', 'minimalist'],
+      watering: 'low',
+      humidity: 'low',
+      temperature: 'moderate',
+      growth: 'slow',
+      size: 'medium',
+      airPurifying: true,
+      flowering: false
+    },
+    {
+      id: '7',
+      name: 'Rubber Plant',
+      scientificName: 'Ficus elastica',
+      match: 87,
+      image: 'https://images.pexels.com/photos/6208091/pexels-photo-6208091.jpeg?auto=compress&cs=tinysrgb&w=600',
+      reasons: ['Glossy burgundy leaves', 'Easy care tree form', 'Grows tall and stately', 'Classic houseplant'],
+      description: 'A classic houseplant with thick, glossy leaves that grows into an impressive indoor tree.',
+      location: 'indoor',
+      lighting: 'bright',
+      maintenance: 'low',
+      petSafe: false,
+      styles: ['modern', 'tropical'],
+      watering: 'medium',
+      humidity: 'medium',
+      temperature: 'moderate',
+      growth: 'medium',
+      size: 'large',
+      airPurifying: true,
+      flowering: false
+    },
+    {
+      id: '8',
+      name: 'Spider Plant',
+      scientificName: 'Chlorophytum comosum',
+      match: 84,
+      image: 'https://images.pexels.com/photos/6208092/pexels-photo-6208092.jpeg?auto=compress&cs=tinysrgb&w=600',
+      reasons: ['Safe for pets and kids', 'Produces baby plants', 'Excellent air purifier', 'Retro charm'],
+      description: 'A pet-safe classic with arching leaves and baby plantlets that dangle like spiders.',
+      location: 'indoor',
+      lighting: 'medium',
+      maintenance: 'low',
+      petSafe: true,
+      styles: ['cottage', 'minimalist'],
+      watering: 'medium',
+      humidity: 'medium',
+      temperature: 'moderate',
+      growth: 'fast',
+      size: 'small',
+      airPurifying: true,
+      flowering: false
     }
   ]);
 
