@@ -737,6 +737,11 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     return null;
   }
 
+  // Calculate selection count for the swipable card page
+  const getSelectionInfo = () => {
+    return `${selectedPlants.length} selected`;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
       {/* Header */}
@@ -754,8 +759,15 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
           <p className="text-gray-600">
             Swipe right to select, left to pass
           </p>
-          <div className="mt-4 text-sm text-gray-500">
-            {currentIndex + 1} of {plants.length} • {selectedPlants.length} selected
+          
+          {/* Selection info - more vivid and visible - ONLY on swipable card page */}
+          <div className="mt-4">
+            <div className="inline-flex items-center gap-2 bg-purple-100 text-purple-700 px-4 py-2 rounded-full border border-purple-200">
+              <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+              <span className="font-semibold text-sm">
+                {getSelectionInfo()}
+              </span>
+            </div>
           </div>
         </div>
 
