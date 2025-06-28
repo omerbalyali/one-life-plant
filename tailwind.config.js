@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'playwrite': ['"Playwrite Norge"', 'cursive'],
+        'delius': ['"Delius Swash Caps"', 'cursive'],
       },
     },
   },
