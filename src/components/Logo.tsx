@@ -19,8 +19,7 @@ export const Logo: React.FC<LogoProps> = ({
       
       {showText && (
         <span 
-          className={`text-2xl font-bold ${textColor}`}
-          style={{ fontFamily: '"Playwrite Italia Moderna", cursive' }}
+          className={`text-2xl font-bold ${textColor} font-playwrite`}
         >
           SoilMate
         </span>
