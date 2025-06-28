@@ -40,6 +40,11 @@ export const useQuiz = () => {
       const nextStep = prev.currentStep + 1;
       const isComplete = nextStep >= quizQuestions.length;
       
+      // Store quiz answers in localStorage when quiz is complete
+      if (isComplete) {
+        localStorage.setItem('quizAnswers', JSON.stringify(prev.answers));
+      }
+      
       return {
         ...prev,
         currentStep: nextStep,
@@ -56,6 +61,9 @@ export const useQuiz = () => {
   }, []);
 
   const restartQuiz = useCallback(() => {
+    // Clear stored answers
+    localStorage.removeItem('quizAnswers');
+    
     setQuizState({
       currentStep: -1,
       answers: {},

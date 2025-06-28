@@ -39,8 +39,23 @@ interface CardState {
   opacity: number;
 }
 
+// Get quiz answers from localStorage or context
+const getQuizAnswers = () => {
+  // For now, we'll get this from a global state or localStorage
+  // In a real app, this would come from props or context
+  const stored = localStorage.getItem('quizAnswers');
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch {
+      return {};
+    }
+  }
+  return {};
+};
+
 export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
-  const [plants] = useState<Plant[]>([
+  const [allPlants] = useState<Plant[]>([
     {
       id: '1',
       name: 'Snake Plant',
@@ -130,7 +145,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Peace Lily',
       scientificName: 'Spathiphyllum wallisii',
       match: 82,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/7084308/pexels-photo-7084308.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Elegant white flowers', 'Tells you when thirsty', 'Thrives in low light', 'NASA-approved air purifier'],
       description: 'Elegant flowering plant that blooms regularly and helps purify indoor air.',
       location: 'indoor',
@@ -193,7 +208,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Spider Plant',
       scientificName: 'Chlorophytum comosum',
       match: 84,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208084/pexels-photo-6208084.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Safe for pets and kids', 'Produces baby plants', 'Excellent air purifier', 'Retro charm'],
       description: 'A pet-safe classic with arching leaves and baby plantlets that dangle like spiders.',
       location: 'indoor',
@@ -214,7 +229,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Aloe Vera',
       scientificName: 'Aloe barbadensis',
       match: 89,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Medicinal healing gel', 'Drought tolerant succulent', 'Produces baby plants', 'Perfect for sunny spots'],
       description: 'A practical succulent with healing properties that thrives in bright light with minimal water.',
       location: 'both',
@@ -235,7 +250,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Boston Fern',
       scientificName: 'Nephrolepis exaltata',
       match: 78,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208083/pexels-photo-6208083.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Lush feathery fronds', 'Natural humidifier', 'Perfect for bathrooms', 'Classic hanging plant'],
       description: 'A graceful fern with delicate fronds that adds a touch of forest magic to any space.',
       location: 'indoor',
@@ -256,7 +271,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Jade Plant',
       scientificName: 'Crassula ovata',
       match: 86,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208082/pexels-photo-6208082.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Symbol of good luck', 'Thick succulent leaves', 'Easy to propagate', 'Grows into tree form'],
       description: 'A lucky succulent with thick, jade-green leaves that grows slowly into a beautiful tree.',
       location: 'both',
@@ -277,7 +292,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Philodendron Heartleaf',
       scientificName: 'Philodendron hederaceum',
       match: 83,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208081/pexels-photo-6208081.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Heart-shaped leaves', 'Trails beautifully', 'Grows in water', 'Low light tolerant'],
       description: 'A charming trailing plant with heart-shaped leaves that cascades beautifully from shelves.',
       location: 'indoor',
@@ -298,7 +313,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Bird of Paradise',
       scientificName: 'Strelitzia reginae',
       match: 91,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208080/pexels-photo-6208080.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Dramatic paddle leaves', 'Orange bird-like flowers', 'Tropical statement piece', 'Instagram favorite'],
       description: 'A dramatic tropical plant with large paddle leaves and stunning orange bird-like flowers.',
       location: 'indoor',
@@ -319,7 +334,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'String of Pearls',
       scientificName: 'Senecio rowleyanus',
       match: 80,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208079/pexels-photo-6208079.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Unique pearl-like leaves', 'Cascading succulent', 'Conversation starter', 'Drought tolerant'],
       description: 'A unique succulent with pearl-like leaves that cascade like a beaded necklace.',
       location: 'indoor',
@@ -340,7 +355,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Dracaena Marginata',
       scientificName: 'Dracaena marginata',
       match: 85,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208078/pexels-photo-6208078.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Spiky architectural form', 'Red-edged leaves', 'Grows tall and narrow', 'Low maintenance tree'],
       description: 'A striking tree-like plant with spiky leaves edged in red that grows tall and narrow.',
       location: 'indoor',
@@ -361,7 +376,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Calathea Orbifolia',
       scientificName: 'Calathea orbifolia',
       match: 79,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208077/pexels-photo-6208077.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Large striped leaves', 'Prayer plant movement', 'Humidity loving', 'Living art piece'],
       description: 'A stunning prayer plant with large, round leaves featuring beautiful silver stripes.',
       location: 'indoor',
@@ -382,7 +397,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Pilea Peperomioides',
       scientificName: 'Pilea peperomioides',
       match: 88,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208076/pexels-photo-6208076.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Round coin-shaped leaves', 'Produces many babies', 'Modern minimalist look', 'Easy to share'],
       description: 'The trendy "Chinese Money Plant" with perfectly round leaves and generous baby production.',
       location: 'indoor',
@@ -403,7 +418,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Echeveria',
       scientificName: 'Echeveria elegans',
       match: 81,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208075/pexels-photo-6208075.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Perfect rosette shape', 'Blue-green coloring', 'Produces colorful flowers', 'Compact succulent'],
       description: 'A beautiful rosette succulent with blue-green leaves that produces stunning flower spikes.',
       location: 'both',
@@ -424,7 +439,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Monstera Adansonii',
       scientificName: 'Monstera adansonii',
       match: 87,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208074/pexels-photo-6208074.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Swiss cheese holes', 'Compact climbing vine', 'Fenestrated leaves', 'Tropical beauty'],
       description: 'The "Swiss Cheese Vine" with naturally occurring holes in its leaves and compact growth.',
       location: 'indoor',
@@ -445,7 +460,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Lavender',
       scientificName: 'Lavandula angustifolia',
       match: 76,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208073/pexels-photo-6208073.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Fragrant purple flowers', 'Natural aromatherapy', 'Attracts pollinators', 'Culinary herb'],
       description: 'A fragrant herb with purple flower spikes that provides natural aromatherapy and attracts bees.',
       location: 'both',
@@ -466,7 +481,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Hoya Carnosa',
       scientificName: 'Hoya carnosa',
       match: 83,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208072/pexels-photo-6208072.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Waxy star-shaped flowers', 'Thick succulent leaves', 'Sweet fragrance', 'Long trailing vines'],
       description: 'The "Wax Plant" with thick, waxy leaves and clusters of fragrant, star-shaped flowers.',
       location: 'indoor',
@@ -487,7 +502,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Anthurium',
       scientificName: 'Anthurium andraeanum',
       match: 84,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208071/pexels-photo-6208071.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Glossy red heart flowers', 'Long-lasting blooms', 'Tropical elegance', 'Air purifying'],
       description: 'An elegant tropical plant with glossy, heart-shaped red flowers that bloom year-round.',
       location: 'indoor',
@@ -508,7 +523,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Haworthia',
       scientificName: 'Haworthia fasciata',
       match: 82,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208070/pexels-photo-6208070.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Zebra-striped leaves', 'Compact rosette form', 'Extremely low maintenance', 'Perfect for desks'],
       description: 'A small succulent with distinctive white stripes that forms perfect rosettes.',
       location: 'indoor',
@@ -529,7 +544,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Alocasia Polly',
       scientificName: 'Alocasia amazonica',
       match: 77,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208069/pexels-photo-6208069.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Dramatic arrow-shaped leaves', 'Metallic silver veins', 'Compact elephant ear', 'Striking contrast'],
       description: 'A dramatic plant with dark green, arrow-shaped leaves featuring striking silver veins.',
       location: 'indoor',
@@ -550,7 +565,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       name: 'Tradescantia Zebrina',
       scientificName: 'Tradescantia zebrina',
       match: 79,
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/6208068/pexels-photo-6208068.jpeg?auto=compress&cs=tinysrgb&w=600',
       reasons: ['Purple and silver stripes', 'Fast growing trailer', 'Easy to propagate', 'Colorful foliage'],
       description: 'A fast-growing trailing plant with stunning purple and silver striped leaves.',
       location: 'indoor',
@@ -568,6 +583,8 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     }
   ]);
 
+  // Filter and randomize plants based on quiz answers
+  const [plants, setPlants] = useState<Plant[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedPlants, setSelectedPlants] = useState<Plant[]>([]);
   const [rejectedPlants, setRejectedPlants] = useState<Plant[]>([]);
@@ -579,18 +596,137 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   
   const startPos = useRef({ x: 0, y: 0 });
 
-  // Initialize cards
+  // Smart filtering function
+  const filterAndRandomizePlants = (quizAnswers: any) => {
+    let filteredPlants = allPlants.filter(plant => {
+      // Location filter
+      if (quizAnswers.location && quizAnswers.location !== 'both') {
+        if (plant.location !== 'both' && plant.location !== quizAnswers.location) {
+          return false;
+        }
+      }
+
+      // Lighting filter
+      if (quizAnswers.lighting) {
+        // Allow some flexibility in lighting requirements
+        const lightingCompatibility: Record<string, string[]> = {
+          'low': ['low', 'medium'],
+          'medium': ['low', 'medium', 'bright'],
+          'bright': ['medium', 'bright', 'direct'],
+          'direct': ['bright', 'direct']
+        };
+        
+        if (!lightingCompatibility[quizAnswers.lighting]?.includes(plant.lighting)) {
+          return false;
+        }
+      }
+
+      // Maintenance filter
+      if (quizAnswers.maintenance) {
+        // Allow equal or lower maintenance
+        const maintenanceOrder = ['low', 'medium', 'high'];
+        const userLevel = maintenanceOrder.indexOf(quizAnswers.maintenance);
+        const plantLevel = maintenanceOrder.indexOf(plant.maintenance);
+        
+        if (plantLevel > userLevel) {
+          return false;
+        }
+      }
+
+      // Pet safety filter
+      if (quizAnswers.pets === 'yes' && !plant.petSafe) {
+        return false;
+      }
+
+      // Style filter - if user selected styles, plant must match at least one
+      if (quizAnswers.style && Array.isArray(quizAnswers.style) && quizAnswers.style.length > 0) {
+        const hasMatchingStyle = plant.styles.some(style => 
+          quizAnswers.style.includes(style)
+        );
+        if (!hasMatchingStyle) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    // Calculate match scores based on how well the plant fits the user's preferences
+    filteredPlants = filteredPlants.map(plant => {
+      let score = 70; // Base score
+
+      // Perfect location match
+      if (quizAnswers.location === plant.location) score += 10;
+      else if (plant.location === 'both') score += 5;
+
+      // Perfect lighting match
+      if (quizAnswers.lighting === plant.lighting) score += 10;
+      else score += 5; // Partial match (already filtered for compatibility)
+
+      // Perfect maintenance match
+      if (quizAnswers.maintenance === plant.maintenance) score += 10;
+      else score += 5; // Lower maintenance is always good
+
+      // Pet safety bonus
+      if (quizAnswers.pets === 'yes' && plant.petSafe) score += 5;
+
+      // Style matching bonus
+      if (quizAnswers.style && Array.isArray(quizAnswers.style)) {
+        const matchingStyles = plant.styles.filter(style => 
+          quizAnswers.style.includes(style)
+        ).length;
+        score += matchingStyles * 3;
+      }
+
+      // Air purifying bonus
+      if (plant.airPurifying) score += 2;
+
+      // Flowering bonus
+      if (plant.flowering) score += 2;
+
+      return {
+        ...plant,
+        match: Math.min(99, Math.max(70, score)) // Keep between 70-99
+      };
+    });
+
+    // Sort by match score and take top candidates
+    filteredPlants.sort((a, b) => b.match - a.match);
+    
+    // Take more plants than we need, then randomize
+    const topPlants = filteredPlants.slice(0, Math.min(16, filteredPlants.length));
+    
+    // Shuffle the top plants
+    for (let i = topPlants.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [topPlants[i], topPlants[j]] = [topPlants[j], topPlants[i]];
+    }
+
+    // Return maximum 8 plants
+    return topPlants.slice(0, 8);
+  };
+
+  // Initialize filtered plants on component mount
   useEffect(() => {
-    const initialCards = plants.map((plant, index) => ({
-      id: plant.id,
-      plant,
-      zIndex: plants.length - index,
-      isAnimating: false,
-      animationType: 'none' as const,
-      transform: `scale(${1 - index * 0.05}) translateY(${index * 10}px)`,
-      opacity: index < 3 ? 1 : 0 // Only show first 3 cards, no transparency
-    }));
-    setCards(initialCards);
+    const quizAnswers = getQuizAnswers();
+    const filteredPlants = filterAndRandomizePlants(quizAnswers);
+    setPlants(filteredPlants);
+  }, []);
+
+  // Initialize cards when plants change
+  useEffect(() => {
+    if (plants.length > 0) {
+      const initialCards = plants.map((plant, index) => ({
+        id: plant.id,
+        plant,
+        zIndex: plants.length - index,
+        isAnimating: false,
+        animationType: 'none' as const,
+        transform: `scale(${1 - index * 0.05}) translateY(${index * 10}px)`,
+        opacity: index < 3 ? 1 : 0
+      }));
+      setCards(initialCards);
+    }
   }, [plants]);
 
   const updateCardStack = () => {
@@ -598,23 +734,20 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       return prevCards.map((card, index) => {
         const stackIndex = index - currentIndex;
         if (stackIndex < 0 || card.isAnimating) {
-          // Card has been processed or is animating - don't change it
           return card;
         } else if (stackIndex === 0) {
-          // Current card - always full opacity, no transparency during drag
           return {
             ...card,
             zIndex: 10,
             transform: isDragging 
               ? `translateX(${dragOffset.x}px) translateY(${dragOffset.y}px) rotate(${dragOffset.x * 0.1}deg)`
               : 'scale(1) translateY(0px)',
-            opacity: 1 // Always full opacity
+            opacity: 1
           };
         } else {
-          // Background cards - no transparency, just scaling and positioning
           const scale = 1 - Math.min(stackIndex, 3) * 0.05;
           const translateY = Math.min(stackIndex, 3) * 10;
-          const opacity = stackIndex < 3 ? 1 : 0; // Either fully visible or hidden
+          const opacity = stackIndex < 3 ? 1 : 0;
           return {
             ...card,
             zIndex: 10 - stackIndex,
@@ -634,7 +767,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (currentIndex >= plants.length || isProcessing) return;
-    e.preventDefault(); // Prevent text selection
+    e.preventDefault();
     setIsDragging(true);
     startPos.current = { x: e.clientX, y: e.clientY };
   };
@@ -650,7 +783,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   const handleMouseUp = () => {
     if (!isDragging || currentIndex >= plants.length || isProcessing) return;
     
-    const threshold = 150; // Increased threshold for slower swiping
+    const threshold = 150;
     if (Math.abs(dragOffset.x) > threshold) {
       if (dragOffset.x > 0) {
         processCardAction('select');
@@ -658,7 +791,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
         processCardAction('reject');
       }
     } else {
-      // Snap back with smooth animation
       setDragOffset({ x: 0, y: 0 });
     }
     
@@ -673,14 +805,12 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
 
     setIsProcessing(true);
     
-    // Add to appropriate list
     if (action === 'select') {
       setSelectedPlants(prev => [...prev, currentPlant]);
     } else {
       setRejectedPlants(prev => [...prev, currentPlant]);
     }
 
-    // Start exit animation
     const direction = action === 'select' ? 'right' : 'left';
     const currentCard = cards[currentIndex];
     if (!currentCard) return;
@@ -695,23 +825,21 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               transform: direction === 'left' 
                 ? 'translateX(-150vw) rotate(-30deg)' 
                 : 'translateX(150vw) rotate(30deg)',
-              opacity: 0 // Only fade during exit animation
+              opacity: 0
             }
           : card
       )
     );
 
-    // Wait for animation to complete before updating index
     setTimeout(() => {
       setCurrentIndex(prev => prev + 1);
       setDragOffset({ x: 0, y: 0 });
       setIsProcessing(false);
       
-      // Check if we've reached the end
       if (currentIndex + 1 >= plants.length) {
         setTimeout(() => setShowFinalSelection(true), 300);
       }
-    }, 900); // Even slower animation duration (was 600ms, now 900ms)
+    }, 900);
   };
 
   const handleSelect = () => {
@@ -724,15 +852,12 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
 
   const backToSwiping = () => {
     setShowFinalSelection(false);
-    // Reset to first unprocessed card or start over if all cards were processed
     const processedCards = selectedPlants.length + rejectedPlants.length;
     if (processedCards >= plants.length) {
-      // All cards were processed, reset everything
       setCurrentIndex(0);
       setSelectedPlants([]);
       setRejectedPlants([]);
       setIsProcessing(false);
-      // Reinitialize cards
       const initialCards = plants.map((plant, index) => ({
         id: plant.id,
         plant,
@@ -744,7 +869,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       }));
       setCards(initialCards);
     } else {
-      // Go back to where we left off
       setCurrentIndex(processedCards);
       setIsProcessing(false);
     }
@@ -847,9 +971,32 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     );
   }
 
+  // Show message if no plants match the criteria
+  if (plants.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4 flex items-center justify-center">
+        <div className="max-w-md mx-auto text-center">
+          <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Leaf className="w-12 h-12 text-gray-400" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">No Perfect Matches Found</h2>
+          <p className="text-gray-600 mb-8">
+            We couldn't find plants that match all your criteria. Let's try the quiz again with different preferences.
+          </p>
+          <button
+            onClick={onRestart}
+            className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-4 px-8 rounded-2xl hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-purple-200 flex items-center justify-center gap-2"
+          >
+            <RefreshCw className="w-5 h-5" />
+            Retake Quiz
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const currentPlant = plants[currentIndex];
   if (!currentPlant) {
-    // All cards processed, show final selection
     if (!showFinalSelection) {
       setShowFinalSelection(true);
     }
@@ -875,7 +1022,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
         </div>
 
         <div className="relative h-[600px] mb-8">
-          {/* Render all cards */}
           {cards.map((card) => (
             <div
               key={card.id}
@@ -922,7 +1068,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                     <span className="text-purple-600 font-bold text-lg">{card.plant.match}%</span>
                   </div>
                   
-                  {/* Swipe indicators - only show on current card */}
                   {card.zIndex === 10 && isDragging && !isProcessing && (
                     <>
                       <div 
@@ -970,7 +1115,6 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
           ))}
         </div>
 
-        {/* Action Buttons */}
         <div className="flex justify-center gap-6">
           <button
             onClick={handleReject}
