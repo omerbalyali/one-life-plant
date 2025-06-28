@@ -393,28 +393,28 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     {
       id: 1,
       name: 'Modern Ceramic',
-      image: 'https://images.pexels.com/photos/6208084/pexels-photo-6208084.jpeg?auto=compress&cs=tinysrgb&w=300',
+      image: 'https://images.pexels.com/photos/32707014/pexels-photo-32707014.jpeg?auto=compress&cs=tinysrgb&w=300',
       price: '€24.99',
-      style: 'Minimalist white ceramic with drainage'
+      style: 'Minimalist green ceramic with drainage'
     },
     {
       id: 2,
       name: 'Terracotta Classic',
-      image: 'https://images.pexels.com/photos/4503821/pexels-photo-4503821.jpeg?auto=compress&cs=tinysrgb&w=300',
+      image: 'https://images.pexels.com/photos/3192175/pexels-photo-3192175.jpeg?auto=compress&cs=tinysrgb&w=300',
       price: '€18.99',
       style: 'Traditional clay pot with saucer'
     },
     {
       id: 3,
       name: 'Woven Basket',
-      image: 'https://images.pexels.com/photos/6208075/pexels-photo-6208075.jpeg?auto=compress&cs=tinysrgb&w=300',
+      image: 'https://images.pexels.com/photos/2718447/pexels-photo-2718447.jpeg?auto=compress&cs=tinysrgb&w=300',
       price: '€32.99',
       style: 'Natural seagrass with plastic liner'
     },
     {
       id: 4,
       name: 'Geometric Stone',
-      image: 'https://images.pexels.com/photos/4503819/pexels-photo-4503819.jpeg?auto=compress&cs=tinysrgb&w=300',
+      image: 'https://images.pexels.com/photos/5825583/pexels-photo-5825583.jpeg?auto=compress&cs=tinysrgb&w=300',
       price: '€45.99',
       style: 'Modern concrete with geometric pattern'
     }
