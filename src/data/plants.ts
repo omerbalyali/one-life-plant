@@ -364,7 +364,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Girl Scout Cookies',
     scientificName: 'Cannabis sativa',
     match: 96,
-    image: 'https://images.pexels.com/photos/7667726/pexels-photo-7667726.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/606506/pexels-photo-606506.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Premium therapeutic strain', 'Beautiful purple-green buds', 'Relaxing evening companion', 'Award-winning genetics'],
     description: 'A legendary hybrid strain known for its sweet, earthy aroma and balanced effects. Perfect for relaxation and creativity.',
     location: 'both',
