@@ -2,6 +2,7 @@ export interface QuizAnswer {
   id: string;
   label: string;
   value: string;
+  icon?: string;
 }
 
 export interface QuizQuestion {

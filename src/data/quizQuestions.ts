@@ -8,9 +8,9 @@ export const quizQuestions: QuizQuestion[] = [
     icon: 'MapPin',
     type: 'single',
     answers: [
-      { id: 'indoor', label: 'Indoor', value: 'indoor' },
-      { id: 'outdoor', label: 'Outdoor', value: 'outdoor' },
-      { id: 'both', label: 'Both', value: 'both' }
+      { id: 'indoor', label: 'Indoor', value: 'indoor', icon: 'Home' },
+      { id: 'outdoor', label: 'Outdoor', value: 'outdoor', icon: 'Trees' },
+      { id: 'both', label: 'Both', value: 'both', icon: 'ArrowLeftRight' }
     ]
   },
   {
@@ -20,22 +20,22 @@ export const quizQuestions: QuizQuestion[] = [
     icon: 'Sun',
     type: 'single',
     answers: [
-      { id: 'low', label: 'Low Light', value: 'low' },
-      { id: 'medium', label: 'Medium Light', value: 'medium' },
-      { id: 'bright', label: 'Bright Light', value: 'bright' },
-      { id: 'direct', label: 'Direct Sunlight', value: 'direct' }
+      { id: 'low', label: 'Low Light', value: 'low', icon: 'Moon' },
+      { id: 'medium', label: 'Medium Light', value: 'medium', icon: 'Cloud' },
+      { id: 'bright', label: 'Bright Light', value: 'bright', icon: 'Sun' },
+      { id: 'direct', label: 'Direct Sunlight', value: 'direct', icon: 'Zap' }
     ]
   },
-    {
+  {
     id: 'experience',
     title: 'What\'s your plant experience?',
     subtitle: 'This helps us recommend the right difficulty level',
     icon: 'GraduationCap',
     type: 'single',
     answers: [
-      { id: 'beginner', label: 'Complete Beginner', value: 'beginner' },
-      { id: 'some', label: 'Some Experience', value: 'some' },
-      { id: 'experienced', label: 'Very Experienced', value: 'experienced' }
+      { id: 'beginner', label: 'Complete Beginner', value: 'beginner', icon: 'Seedling' },
+      { id: 'some', label: 'Some Experience', value: 'some', icon: 'Sprout' },
+      { id: 'experienced', label: 'Very Experienced', value: 'experienced', icon: 'TreePine' }
     ]
   },
   {
@@ -45,9 +45,9 @@ export const quizQuestions: QuizQuestion[] = [
     icon: 'Clock',
     type: 'single',
     answers: [
-      { id: 'low', label: 'Low Maintenance', value: 'low' },
-      { id: 'medium', label: 'Medium Care', value: 'medium' },
-      { id: 'high', label: 'High Maintenance', value: 'high' }
+      { id: 'low', label: 'Low Maintenance', value: 'low', icon: 'Battery' },
+      { id: 'medium', label: 'Medium Care', value: 'medium', icon: 'BatteryMedium' },
+      { id: 'high', label: 'High Maintenance', value: 'high', icon: 'BatteryFull' }
     ]
   },
   {
@@ -57,11 +57,11 @@ export const quizQuestions: QuizQuestion[] = [
     icon: 'Palette',
     type: 'multiple',
     answers: [
-      { id: 'minimalist', label: 'Minimalist', value: 'minimalist' },
-      { id: 'tropical', label: 'Tropical', value: 'tropical' },
-      { id: 'desert', label: 'Desert/Succulent', value: 'desert' },
-      { id: 'cottage', label: 'Cottage Core', value: 'cottage' },
-      { id: 'modern', label: 'Modern', value: 'modern' }
+      { id: 'minimalist', label: 'Minimalist', value: 'minimalist', icon: 'Square' },
+      { id: 'tropical', label: 'Tropical', value: 'tropical', icon: 'Palmtree' },
+      { id: 'desert', label: 'Desert/Succulent', value: 'desert', icon: 'Cactus' },
+      { id: 'cottage', label: 'Cottage Core', value: 'cottage', icon: 'Flower' },
+      { id: 'modern', label: 'Modern', value: 'modern', icon: 'Triangle' }
     ]
   },
   {
@@ -71,11 +71,11 @@ export const quizQuestions: QuizQuestion[] = [
     icon: 'Paintbrush',
     type: 'multiple',
     answers: [
-      { id: 'green', label: 'Deep Greens', value: 'green' },
-      { id: 'patterned', label: 'Patterned', value: 'patterned' },
-      { id: 'purple', label: 'Purple Tones', value: 'purple' },
-      { id: 'silver', label: 'Silver/Gray', value: 'silver' },
-      { id: 'red', label: 'Red Accents', value: 'red' }
+      { id: 'green', label: 'Deep Greens', value: 'green', icon: 'Leaf' },
+      { id: 'patterned', label: 'Patterned', value: 'patterned', icon: 'Sparkles' },
+      { id: 'purple', label: 'Purple Tones', value: 'purple', icon: 'Grape' },
+      { id: 'silver', label: 'Silver/Gray', value: 'silver', icon: 'Circle' },
+      { id: 'red', label: 'Red Accents', value: 'red', icon: 'Cherry' }
     ]
   },
   {
@@ -85,11 +85,11 @@ export const quizQuestions: QuizQuestion[] = [
     icon: 'User',
     type: 'multiple',
     answers: [
-      { id: 'busy', label: 'Always Busy', value: 'busy' },
-      { id: 'homebody', label: 'Love Being Home', value: 'homebody' },
-      { id: 'traveler', label: 'Frequent Traveler', value: 'traveler' },
-      { id: 'social', label: 'Love Entertaining', value: 'social' },
-      { id: 'peaceful', label: 'Seek Tranquility', value: 'peaceful' }
+      { id: 'busy', label: 'Always Busy', value: 'busy', icon: 'Clock' },
+      { id: 'homebody', label: 'Love Being Home', value: 'homebody', icon: 'Home' },
+      { id: 'traveler', label: 'Frequent Traveler', value: 'traveler', icon: 'Plane' },
+      { id: 'social', label: 'Love Entertaining', value: 'social', icon: 'Users' },
+      { id: 'peaceful', label: 'Seek Tranquility', value: 'peaceful', icon: 'Heart' }
     ]
   }
 ];

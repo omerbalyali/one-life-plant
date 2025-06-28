@@ -1,19 +1,25 @@
 import React from 'react';
 import { Check } from 'lucide-react';
+import * as Icons from 'lucide-react';
 
 interface AnswerPillProps {
   label: string;
   isSelected: boolean;
   onClick: () => void;
   type: 'single' | 'multiple';
+  icon?: string;
 }
 
 export const AnswerPill: React.FC<AnswerPillProps> = ({
   label,
   isSelected,
   onClick,
-  type
+  type,
+  icon
 }) => {
+  // Get the icon component dynamically
+  const IconComponent = icon ? (Icons as any)[icon] : null;
+
   return (
     <button
       onClick={onClick}
@@ -27,7 +33,21 @@ export const AnswerPill: React.FC<AnswerPillProps> = ({
       `}
     >
       <div className="flex items-center justify-between">
-        <span className="font-medium text-left">{label}</span>
+        <div className="flex items-center gap-3">
+          {IconComponent && (
+            <div className={`
+              w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200
+              ${isSelected
+                ? 'bg-white/20'
+                : 'bg-emerald-100'
+              }
+            `}>
+              <IconComponent className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-emerald-600'}`} />
+            </div>
+          )}
+          <span className="font-medium text-left">{label}</span>
+        </div>
+        
         {type === 'multiple' && (
           <div className={`
             w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200
