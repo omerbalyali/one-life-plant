@@ -529,7 +529,7 @@ export const plantsDatabase: Plant[] = [
   },
   {
     id: '25',
-    name: 'Tradescantia Zebrina',
+    name: 'Inchplant',
     scientificName: 'Tradescantia zebrina',
     match: 79,
     image: 'https://images.pexels.com/photos/32175827/pexels-photo-32175827.jpeg?auto=compress&cs=tinysrgb&w=600',
