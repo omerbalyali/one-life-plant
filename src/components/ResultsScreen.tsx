@@ -81,6 +81,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   const [cards, setCards] = useState<CardState[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [isProcessing, setIsProcessing] = useState(false);
   
   const startPos = useRef({ x: 0, y: 0 });
 
@@ -102,13 +103,9 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     setCards(prevCards => {
       return prevCards.map((card, index) => {
         const stackIndex = index - currentIndex;
-        if (stackIndex < 0) {
-          // Card has been processed
-          return {
-            ...card,
-            opacity: 0,
-            zIndex: 0
-          };
+        if (stackIndex < 0 || card.isAnimating) {
+          // Card has been processed or is animating - don't change it
+          return card;
         } else if (stackIndex === 0) {
           // Current card
           return {
@@ -136,17 +133,19 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   };
 
   useEffect(() => {
-    updateCardStack();
-  }, [currentIndex, isDragging, dragOffset]);
+    if (!isProcessing) {
+      updateCardStack();
+    }
+  }, [currentIndex, isDragging, dragOffset, isProcessing]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (currentIndex >= plants.length) return;
+    if (currentIndex >= plants.length || isProcessing) return;
     setIsDragging(true);
     startPos.current = { x: e.clientX, y: e.clientY };
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || currentIndex >= plants.length) return;
+    if (!isDragging || currentIndex >= plants.length || isProcessing) return;
     
     const deltaX = e.clientX - startPos.current.x;
     const deltaY = e.clientY - startPos.current.y;
@@ -154,24 +153,40 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   };
 
   const handleMouseUp = () => {
-    if (!isDragging || currentIndex >= plants.length) return;
+    if (!isDragging || currentIndex >= plants.length || isProcessing) return;
     
-    const threshold = 100;
+    const threshold = 150; // Increased threshold for slower swiping
     if (Math.abs(dragOffset.x) > threshold) {
       if (dragOffset.x > 0) {
-        handleSelect();
+        processCardAction('select');
       } else {
-        handleReject();
+        processCardAction('reject');
       }
     } else {
-      // Snap back
+      // Snap back with smooth animation
       setDragOffset({ x: 0, y: 0 });
     }
     
     setIsDragging(false);
   };
 
-  const animateCardExit = (direction: 'left' | 'right') => {
+  const processCardAction = (action: 'select' | 'reject') => {
+    if (isProcessing || currentIndex >= plants.length) return;
+    
+    const currentPlant = plants[currentIndex];
+    if (!currentPlant) return;
+
+    setIsProcessing(true);
+    
+    // Add to appropriate list
+    if (action === 'select') {
+      setSelectedPlants(prev => [...prev, currentPlant]);
+    } else {
+      setRejectedPlants(prev => [...prev, currentPlant]);
+    }
+
+    // Start exit animation
+    const direction = action === 'select' ? 'right' : 'left';
     const currentCard = cards[currentIndex];
     if (!currentCard) return;
 
@@ -183,8 +198,8 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               isAnimating: true,
               animationType: direction === 'left' ? 'swipe-left' : 'swipe-right',
               transform: direction === 'left' 
-                ? 'translateX(-100vw) rotate(-30deg)' 
-                : 'translateX(100vw) rotate(30deg)',
+                ? 'translateX(-120vw) rotate(-30deg)' 
+                : 'translateX(120vw) rotate(30deg)',
               opacity: 0
             }
           : card
@@ -195,28 +210,21 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     setTimeout(() => {
       setCurrentIndex(prev => prev + 1);
       setDragOffset({ x: 0, y: 0 });
+      setIsProcessing(false);
       
       // Check if we've reached the end
       if (currentIndex + 1 >= plants.length) {
         setTimeout(() => setShowFinalSelection(true), 300);
       }
-    }, 300);
+    }, 600); // Slower animation duration
   };
 
   const handleSelect = () => {
-    const currentPlant = plants[currentIndex];
-    if (currentPlant) {
-      setSelectedPlants(prev => [...prev, currentPlant]);
-      animateCardExit('right');
-    }
+    processCardAction('select');
   };
 
   const handleReject = () => {
-    const currentPlant = plants[currentIndex];
-    if (currentPlant) {
-      setRejectedPlants(prev => [...prev, currentPlant]);
-      animateCardExit('left');
-    }
+    processCardAction('reject');
   };
 
   const backToSwiping = () => {
@@ -228,6 +236,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       setCurrentIndex(0);
       setSelectedPlants([]);
       setRejectedPlants([]);
+      setIsProcessing(false);
       // Reinitialize cards
       const initialCards = plants.map((plant, index) => ({
         id: plant.id,
@@ -242,6 +251,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     } else {
       // Go back to where we left off
       setCurrentIndex(processedCards);
+      setIsProcessing(false);
     }
   };
 
@@ -374,20 +384,24 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
           {cards.map((card) => (
             <div
               key={card.id}
-              className={`absolute inset-0 transition-all duration-300 ease-out ${
-                card.isAnimating ? 'transition-all duration-300' : ''
+              className={`absolute inset-0 ${
+                card.isAnimating 
+                  ? 'transition-all duration-[600ms] ease-out' 
+                  : isDragging && card.zIndex === 10 
+                    ? 'transition-none' 
+                    : 'transition-all duration-300 ease-out'
               } ${
-                card.zIndex === 10 && !card.isAnimating ? 'cursor-grab active:cursor-grabbing' : ''
+                card.zIndex === 10 && !card.isAnimating && !isProcessing ? 'cursor-grab active:cursor-grabbing' : ''
               }`}
               style={{
                 transform: card.transform,
                 opacity: card.opacity,
                 zIndex: card.zIndex
               }}
-              onMouseDown={card.zIndex === 10 ? handleMouseDown : undefined}
-              onMouseMove={card.zIndex === 10 ? handleMouseMove : undefined}
-              onMouseUp={card.zIndex === 10 ? handleMouseUp : undefined}
-              onMouseLeave={card.zIndex === 10 ? handleMouseUp : undefined}
+              onMouseDown={card.zIndex === 10 && !isProcessing ? handleMouseDown : undefined}
+              onMouseMove={card.zIndex === 10 && !isProcessing ? handleMouseMove : undefined}
+              onMouseUp={card.zIndex === 10 && !isProcessing ? handleMouseUp : undefined}
+              onMouseLeave={card.zIndex === 10 && !isProcessing ? handleMouseUp : undefined}
             >
               <div className="bg-white rounded-3xl shadow-2xl overflow-hidden h-full border border-gray-100">
                 <div className="relative h-2/3">
@@ -401,7 +415,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                   </div>
                   
                   {/* Swipe indicators - only show on current card */}
-                  {card.zIndex === 10 && isDragging && (
+                  {card.zIndex === 10 && isDragging && !isProcessing && (
                     <>
                       <div 
                         className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
@@ -452,16 +466,16 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
         <div className="flex justify-center gap-6">
           <button
             onClick={handleReject}
-            disabled={currentIndex >= plants.length}
-            className="w-16 h-16 bg-white border-4 border-red-200 rounded-full flex items-center justify-center hover:border-red-300 hover:bg-red-50 transition-all duration-300 transform hover:scale-110 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={currentIndex >= plants.length || isProcessing}
+            className="w-16 h-16 bg-white border-4 border-red-200 rounded-full flex items-center justify-center hover:border-red-300 hover:bg-red-50 transition-all duration-300 transform hover:scale-110 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
             <X className="w-8 h-8 text-red-500" />
           </button>
           
           <button
             onClick={handleSelect}
-            disabled={currentIndex >= plants.length}
-            className="w-16 h-16 bg-white border-4 border-green-200 rounded-full flex items-center justify-center hover:border-green-300 hover:bg-green-50 transition-all duration-300 transform hover:scale-110 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={currentIndex >= plants.length || isProcessing}
+            className="w-16 h-16 bg-white border-4 border-green-200 rounded-full flex items-center justify-center hover:border-green-300 hover:bg-green-50 transition-all duration-300 transform hover:scale-110 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
             <Check className="w-8 h-8 text-green-500" />
           </button>
