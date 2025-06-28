@@ -600,4 +600,3 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     </div>
   );
 };
-</action>
