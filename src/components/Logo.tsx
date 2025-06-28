@@ -13,7 +13,7 @@ export const Logo: React.FC<LogoProps> = ({
 }) => {
   return (
     <div className="flex items-center gap-3">
-      {/* Heart-shaped leaf logo */}
+      {/* Heart inside leaf logo */}
       <div className={`relative ${className}`}>
         <svg
           viewBox="0 0 32 32"
@@ -21,41 +21,29 @@ export const Logo: React.FC<LogoProps> = ({
           xmlns="http://www.w3.org/2000/svg"
           className="w-full h-full"
         >
-          {/* Left leaf forming left side of heart */}
+          {/* Outer leaf shape */}
           <path
-            d="M8 16C8 10 12 6 16 6C16 6 16 10 16 16C16 16 12 20 8 16Z"
+            d="M16 4C20 4 26 8 26 16C26 20 22 26 16 28C10 26 6 20 6 16C6 8 12 4 16 4Z"
             fill="currentColor"
             className="text-white"
             opacity="0.9"
           />
-          {/* Right leaf forming right side of heart */}
+          
+          {/* Inner heart shape */}
           <path
-            d="M24 16C24 10 20 6 16 6C16 6 16 10 16 16C16 16 20 20 24 16Z"
+            d="M16 20C16 20 12 16 12 13C12 11 13.5 10 15 10C15.5 10 16 10.5 16 10.5C16 10.5 16.5 10 17 10C18.5 10 20 11 20 13C20 16 16 20 16 20Z"
             fill="currentColor"
-            className="text-white"
-            opacity="0.9"
+            className="text-purple-300"
+            opacity="1"
           />
-          {/* Stem/bottom point of heart */}
+          
+          {/* Subtle leaf vein */}
           <path
-            d="M16 16C16 16 16 20 16 26C16 26 14 24 16 16Z"
-            fill="currentColor"
-            className="text-white"
-            opacity="0.7"
-          />
-          {/* Leaf veins for detail */}
-          <path
-            d="M12 12C12 12 14 14 16 16"
+            d="M16 6L16 26"
             stroke="currentColor"
             strokeWidth="0.5"
             className="text-white"
-            opacity="0.6"
-          />
-          <path
-            d="M20 12C20 12 18 14 16 16"
-            stroke="currentColor"
-            strokeWidth="0.5"
-            className="text-white"
-            opacity="0.6"
+            opacity="0.4"
           />
         </svg>
       </div>
