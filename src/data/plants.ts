@@ -301,7 +301,7 @@ export const plantsDatabase: Plant[] = [
     name: 'String of Pearls',
     scientificName: 'Senecio rowleyanus',
     match: 80,
-    image: 'https://images.pexels.com/photos/6208079/pexels-photo-6208079.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/13799752/pexels-photo-13799752.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Unique pearl-like leaves', 'Cascading succulent', 'Conversation starter', 'Drought tolerant'],
     description: 'A unique succulent with pearl-like leaves that cascade like a beaded necklace.',
     location: 'indoor',
