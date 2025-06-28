@@ -257,7 +257,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
 
   if (showFinalSelection) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4 overflow-hidden">
         <div className="max-w-2xl mx-auto py-8">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
@@ -362,7 +362,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4 overflow-hidden">
       <div className="max-w-md mx-auto py-8">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
@@ -379,7 +379,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
           </div>
         </div>
 
-        <div className="relative h-[600px] mb-8">
+        <div className="relative h-[600px] mb-8 overflow-hidden">
           {/* Render all cards */}
           {cards.map((card) => (
             <div
