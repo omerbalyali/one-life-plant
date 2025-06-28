@@ -466,7 +466,7 @@ export const plantsDatabase: Plant[] = [
   },
   {
     id: '22',
-    name: 'Anthurium',
+    name: 'Laceleaf',
     scientificName: 'Anthurium andraeanum',
     match: 84,
     image: 'https://images.pexels.com/photos/6208071/pexels-photo-6208071.jpeg?auto=compress&cs=tinysrgb&w=600',
