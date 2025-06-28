@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Leaf, RefreshCw, Check, X, Heart, ArrowLeft, Star } from 'lucide-react';
+import { Leaf, RefreshCw, Check, X, Heart, ArrowLeft, Star, Lightbulb, ShoppingCart, Droplets, Sun, Clock, Shield, ExternalLink } from 'lucide-react';
 import { Plant, plantsDatabase } from '../data/plants';
 
 interface ResultsScreenProps {
@@ -333,11 +333,67 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     }
   };
 
+  // Generate care tips based on quiz answers
+  const generateCareTips = (quizAnswers: any, plant: Plant) => {
+    const tips = [];
+
+    // Lighting tip
+    const lightingTips = {
+      'low': 'Place in a spot with indirect light, away from windows. North-facing windows work well.',
+      'medium': 'Position near a window with filtered light or a few feet from a bright window.',
+      'bright': 'Place near a south or west-facing window for plenty of bright, indirect light.',
+      'direct': 'This plant loves direct sunlight - place it right by a sunny window.'
+    };
+    tips.push({
+      icon: Sun,
+      title: 'Lighting',
+      description: lightingTips[quizAnswers.lighting] || lightingTips[plant.lighting]
+    });
+
+    // Watering tip
+    const wateringTips = {
+      'low': 'Water sparingly, only when soil is completely dry. Usually every 2-3 weeks.',
+      'medium': 'Water when top inch of soil feels dry. Typically once a week.',
+      'high': 'Keep soil consistently moist but not soggy. Check every few days.'
+    };
+    tips.push({
+      icon: Droplets,
+      title: 'Watering',
+      description: wateringTips[plant.watering]
+    });
+
+    // Maintenance tip
+    const maintenanceTips = {
+      'low': 'Very easy care! Just water occasionally and wipe leaves monthly.',
+      'medium': 'Regular watering and occasional feeding during growing season.',
+      'high': 'Needs consistent attention - regular watering, humidity, and feeding.'
+    };
+    tips.push({
+      icon: Clock,
+      title: 'Maintenance',
+      description: maintenanceTips[quizAnswers.maintenance] || maintenanceTips[plant.maintenance]
+    });
+
+    // Pet safety tip
+    if (quizAnswers.pets === 'yes') {
+      tips.push({
+        icon: Shield,
+        title: 'Pet Safety',
+        description: plant.petSafe 
+          ? 'Safe for pets! No worries if your furry friends get curious.'
+          : 'Keep away from pets - this plant can be toxic if ingested.'
+      });
+    }
+
+    return tips;
+  };
+
   if (showFinalSelection) {
     // Sort selected plants by match percentage (highest first)
     const sortedSelectedPlants = [...selectedPlants].sort((a, b) => b.match - a.match);
     const bestMatch = sortedSelectedPlants[0];
     const otherMatches = sortedSelectedPlants.slice(1);
+    const quizAnswers = getQuizAnswers();
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4">
@@ -401,6 +457,75 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
                           ))}
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Care Tips and Care Products Cards */}
+              {bestMatch && (
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Care Tips Card */}
+                  <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                        <Lightbulb className="w-5 h-5 text-emerald-600" />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-800">Care Tips</h3>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      {generateCareTips(quizAnswers, bestMatch).map((tip, index) => (
+                        <div key={index} className="flex gap-3">
+                          <div className="w-8 h-8 bg-emerald-50 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <tip.icon className="w-4 h-4 text-emerald-600" />
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-gray-800 text-sm">{tip.title}</h4>
+                            <p className="text-gray-600 text-sm leading-relaxed">{tip.description}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Care Products Card */}
+                  <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                        <ShoppingCart className="w-5 h-5 text-purple-600" />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-800">Care Products</h3>
+                    </div>
+                    
+                    <div className="mb-4">
+                      <h4 className="font-semibold text-gray-800 mb-2">Complete Care Package</h4>
+                      <p className="text-gray-600 text-sm mb-3">Everything you need to keep your plant thriving:</p>
+                      
+                      <ul className="space-y-1 text-sm text-gray-600 mb-4">
+                        <li>• Premium potting soil (2L)</li>
+                        <li>• Liquid plant fertilizer</li>
+                        <li>• Decorative ceramic pot</li>
+                        <li>• Plant care guide</li>
+                        <li>• Watering schedule stickers</li>
+                      </ul>
+                    </div>
+
+                    <div className="space-y-3">
+                      <button className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-3 px-4 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 flex items-center justify-center gap-2">
+                        <ShoppingCart className="w-4 h-4" />
+                        Buy on Amazon - $29.99
+                      </button>
+                      
+                      <button className="w-full bg-white border-2 border-emerald-500 text-emerald-600 font-semibold py-3 px-4 rounded-xl hover:bg-emerald-50 transition-all duration-300 flex items-center justify-center gap-2">
+                        <ExternalLink className="w-4 h-4" />
+                        Home Depot - $27.99
+                      </button>
+                      
+                      <button className="w-full bg-white border-2 border-orange-500 text-orange-600 font-semibold py-3 px-4 rounded-xl hover:bg-orange-50 transition-all duration-300 flex items-center justify-center gap-2">
+                        <ExternalLink className="w-4 h-4" />
+                        Local Nursery - $32.99
+                      </button>
                     </div>
                   </div>
                 </div>
