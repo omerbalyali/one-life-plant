@@ -42,6 +42,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   
   const startPos = useRef({ x: 0, y: 0 });
+  const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Smart filtering function
   const filterAndRandomizePlants = (quizAnswers: any) => {
@@ -212,6 +213,15 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     }
   }, [currentIndex, isDragging, dragOffset, isProcessing]);
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleMouseDown = (e: React.MouseEvent) => {
     if (currentIndex >= plants.length || isProcessing) return;
     e.preventDefault();
@@ -230,7 +240,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   const handleMouseUp = () => {
     if (!isDragging || currentIndex >= plants.length || isProcessing) return;
     
-    const threshold = 150;
+    const threshold = 100; // Reduced threshold for more responsive swiping
     if (Math.abs(dragOffset.x) > threshold) {
       if (dragOffset.x > 0) {
         processCardAction('select');
@@ -249,6 +259,11 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     
     const currentPlant = plants[currentIndex];
     if (!currentPlant) return;
+
+    // Clear any existing timeout
+    if (animationTimeoutRef.current) {
+      clearTimeout(animationTimeoutRef.current);
+    }
 
     setIsProcessing(true);
     
@@ -278,23 +293,28 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       )
     );
 
-    setTimeout(() => {
+    // Reduced animation time for faster swiping
+    animationTimeoutRef.current = setTimeout(() => {
       setCurrentIndex(prev => prev + 1);
       setDragOffset({ x: 0, y: 0 });
       setIsProcessing(false);
       
       if (currentIndex + 1 >= plants.length) {
-        setTimeout(() => setShowFinalSelection(true), 300);
+        setTimeout(() => setShowFinalSelection(true), 200);
       }
-    }, 900);
+    }, 400); // Reduced from 900ms to 400ms
   };
 
   const handleSelect = () => {
-    processCardAction('select');
+    if (!isProcessing) {
+      processCardAction('select');
+    }
   };
 
   const handleReject = () => {
-    processCardAction('reject');
+    if (!isProcessing) {
+      processCardAction('reject');
+    }
   };
 
   const backToSwiping = () => {
@@ -474,10 +494,10 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               key={card.id}
               className={`absolute inset-0 select-none ${
                 card.isAnimating 
-                  ? 'transition-all duration-[900ms] ease-out' 
+                  ? 'transition-all duration-[400ms] ease-out' 
                   : isDragging && card.zIndex === 10 
                     ? 'transition-none' 
-                    : 'transition-all duration-300 ease-out'
+                    : 'transition-all duration-200 ease-out'
               } ${
                 card.zIndex === 10 && !card.isAnimating && !isProcessing ? 'cursor-grab active:cursor-grabbing' : ''
               }`}
