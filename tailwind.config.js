@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'delius': ['"Delius Swash Caps"', 'sans-serif'],
+        'delius': ['"Delius Swash Caps"', 'cursive'],
       },
     },
   },
