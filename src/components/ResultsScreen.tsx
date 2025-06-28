@@ -15,6 +15,16 @@ interface Plant {
   description: string;
 }
 
+interface CardState {
+  id: string;
+  plant: Plant;
+  zIndex: number;
+  isAnimating: boolean;
+  animationType: 'swipe-left' | 'swipe-right' | 'none';
+  transform: string;
+  opacity: number;
+}
+
 export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   const [plants] = useState<Plant[]>([
     {
@@ -67,23 +77,76 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedPlants, setSelectedPlants] = useState<Plant[]>([]);
   const [rejectedPlants, setRejectedPlants] = useState<Plant[]>([]);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
   const [showFinalSelection, setShowFinalSelection] = useState(false);
+  const [cards, setCards] = useState<CardState[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   
-  const cardRef = useRef<HTMLDivElement>(null);
   const startPos = useRef({ x: 0, y: 0 });
 
-  const currentPlant = plants[currentIndex];
-  const isLastCard = currentIndex >= plants.length - 1;
+  // Initialize cards
+  useEffect(() => {
+    const initialCards = plants.map((plant, index) => ({
+      id: plant.id,
+      plant,
+      zIndex: plants.length - index,
+      isAnimating: false,
+      animationType: 'none' as const,
+      transform: `scale(${1 - index * 0.05}) translateY(${index * 10}px)`,
+      opacity: index < 3 ? 1 - index * 0.2 : 0
+    }));
+    setCards(initialCards);
+  }, [plants]);
+
+  const updateCardStack = () => {
+    setCards(prevCards => {
+      return prevCards.map((card, index) => {
+        const stackIndex = index - currentIndex;
+        if (stackIndex < 0) {
+          // Card has been processed
+          return {
+            ...card,
+            opacity: 0,
+            zIndex: 0
+          };
+        } else if (stackIndex === 0) {
+          // Current card
+          return {
+            ...card,
+            zIndex: 10,
+            transform: isDragging 
+              ? `translateX(${dragOffset.x}px) translateY(${dragOffset.y}px) rotate(${dragOffset.x * 0.1}deg)`
+              : 'scale(1) translateY(0px)',
+            opacity: isDragging ? Math.max(0.7, 1 - Math.abs(dragOffset.x) / 300) : 1
+          };
+        } else {
+          // Background cards
+          const scale = 1 - Math.min(stackIndex, 3) * 0.05;
+          const translateY = Math.min(stackIndex, 3) * 10;
+          const opacity = stackIndex < 3 ? 1 - stackIndex * 0.2 : 0;
+          return {
+            ...card,
+            zIndex: 10 - stackIndex,
+            transform: `scale(${scale}) translateY(${translateY}px)`,
+            opacity
+          };
+        }
+      });
+    });
+  };
+
+  useEffect(() => {
+    updateCardStack();
+  }, [currentIndex, isDragging, dragOffset]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    if (currentIndex >= plants.length) return;
     setIsDragging(true);
     startPos.current = { x: e.clientX, y: e.clientY };
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
+    if (!isDragging || currentIndex >= plants.length) return;
     
     const deltaX = e.clientX - startPos.current.x;
     const deltaY = e.clientY - startPos.current.y;
@@ -91,7 +154,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
   };
 
   const handleMouseUp = () => {
-    if (!isDragging) return;
+    if (!isDragging || currentIndex >= plants.length) return;
     
     const threshold = 100;
     if (Math.abs(dragOffset.x) > threshold) {
@@ -100,31 +163,59 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       } else {
         handleReject();
       }
+    } else {
+      // Snap back
+      setDragOffset({ x: 0, y: 0 });
     }
     
     setIsDragging(false);
-    setDragOffset({ x: 0, y: 0 });
+  };
+
+  const animateCardExit = (direction: 'left' | 'right') => {
+    const currentCard = cards[currentIndex];
+    if (!currentCard) return;
+
+    setCards(prevCards => 
+      prevCards.map(card => 
+        card.id === currentCard.id
+          ? {
+              ...card,
+              isAnimating: true,
+              animationType: direction === 'left' ? 'swipe-left' : 'swipe-right',
+              transform: direction === 'left' 
+                ? 'translateX(-100vw) rotate(-30deg)' 
+                : 'translateX(100vw) rotate(30deg)',
+              opacity: 0
+            }
+          : card
+      )
+    );
+
+    // Wait for animation to complete before updating index
+    setTimeout(() => {
+      setCurrentIndex(prev => prev + 1);
+      setDragOffset({ x: 0, y: 0 });
+      
+      // Check if we've reached the end
+      if (currentIndex + 1 >= plants.length) {
+        setTimeout(() => setShowFinalSelection(true), 300);
+      }
+    }, 300);
   };
 
   const handleSelect = () => {
+    const currentPlant = plants[currentIndex];
     if (currentPlant) {
       setSelectedPlants(prev => [...prev, currentPlant]);
-      nextCard();
+      animateCardExit('right');
     }
   };
 
   const handleReject = () => {
+    const currentPlant = plants[currentIndex];
     if (currentPlant) {
       setRejectedPlants(prev => [...prev, currentPlant]);
-      nextCard();
-    }
-  };
-
-  const nextCard = () => {
-    if (isLastCard) {
-      setShowFinalSelection(true);
-    } else {
-      setCurrentIndex(prev => prev + 1);
+      animateCardExit('left');
     }
   };
 
@@ -137,14 +228,22 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       setCurrentIndex(0);
       setSelectedPlants([]);
       setRejectedPlants([]);
+      // Reinitialize cards
+      const initialCards = plants.map((plant, index) => ({
+        id: plant.id,
+        plant,
+        zIndex: plants.length - index,
+        isAnimating: false,
+        animationType: 'none' as const,
+        transform: `scale(${1 - index * 0.05}) translateY(${index * 10}px)`,
+        opacity: index < 3 ? 1 - index * 0.2 : 0
+      }));
+      setCards(initialCards);
     } else {
       // Go back to where we left off
       setCurrentIndex(processedCards);
     }
   };
-
-  const rotation = isDragging ? dragOffset.x * 0.1 : 0;
-  const opacity = isDragging ? Math.max(0.7, 1 - Math.abs(dragOffset.x) / 300) : 1;
 
   if (showFinalSelection) {
     return (
@@ -243,7 +342,14 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     );
   }
 
-  if (!currentPlant) return null;
+  const currentPlant = plants[currentIndex];
+  if (!currentPlant) {
+    // All cards processed, show final selection
+    if (!showFinalSelection) {
+      setShowFinalSelection(true);
+    }
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 p-4">
@@ -264,105 +370,98 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
         </div>
 
         <div className="relative h-[600px] mb-8">
-          {/* Current Card */}
-          <div
-            ref={cardRef}
-            className="absolute inset-0 cursor-grab active:cursor-grabbing"
-            style={{
-              transform: `translateX(${dragOffset.x}px) translateY(${dragOffset.y}px) rotate(${rotation}deg)`,
-              opacity,
-              zIndex: 10
-            }}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-          >
-            <div className="bg-white rounded-3xl shadow-2xl overflow-hidden h-full border border-gray-100">
-              <div className="relative h-2/3">
-                <img
-                  src={currentPlant.image}
-                  alt={currentPlant.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 shadow-lg">
-                  <span className="text-purple-600 font-bold text-lg">{currentPlant.match}%</span>
-                </div>
-                
-                {/* Swipe indicators */}
-                {isDragging && (
-                  <>
-                    <div 
-                      className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
-                        dragOffset.x > 50 ? 'opacity-100' : 'opacity-0'
-                      }`}
-                    >
-                      <div className="bg-green-500 text-white px-6 py-3 rounded-2xl font-bold text-xl transform rotate-12">
-                        LIKE
-                      </div>
-                    </div>
-                    <div 
-                      className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
-                        dragOffset.x < -50 ? 'opacity-100' : 'opacity-0'
-                      }`}
-                    >
-                      <div className="bg-red-500 text-white px-6 py-3 rounded-2xl font-bold text-xl transform -rotate-12">
-                        PASS
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-              
-              <div className="p-6 h-1/3 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-1">{currentPlant.name}</h3>
-                  <p className="text-gray-500 italic mb-3">{currentPlant.scientificName}</p>
-                  <p className="text-gray-600 text-sm mb-4">{currentPlant.description}</p>
-                </div>
-                
-                <div className="flex flex-wrap gap-2">
-                  {currentPlant.reasons.slice(0, 3).map((reason) => (
-                    <span
-                      key={reason}
-                      className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full"
-                    >
-                      {reason}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Next Card Preview */}
-          {currentIndex < plants.length - 1 && (
-            <div 
-              className="absolute inset-0 bg-white rounded-3xl shadow-xl border border-gray-100"
-              style={{ 
-                zIndex: 5,
-                transform: 'scale(0.95) translateY(10px)',
-                opacity: 0.8
+          {/* Render all cards */}
+          {cards.map((card) => (
+            <div
+              key={card.id}
+              className={`absolute inset-0 transition-all duration-300 ease-out ${
+                card.isAnimating ? 'transition-all duration-300' : ''
+              } ${
+                card.zIndex === 10 && !card.isAnimating ? 'cursor-grab active:cursor-grabbing' : ''
+              }`}
+              style={{
+                transform: card.transform,
+                opacity: card.opacity,
+                zIndex: card.zIndex
               }}
+              onMouseDown={card.zIndex === 10 ? handleMouseDown : undefined}
+              onMouseMove={card.zIndex === 10 ? handleMouseMove : undefined}
+              onMouseUp={card.zIndex === 10 ? handleMouseUp : undefined}
+              onMouseLeave={card.zIndex === 10 ? handleMouseUp : undefined}
             >
-              <div className="h-2/3 bg-gray-100 rounded-t-3xl"></div>
-              <div className="p-6 h-1/3"></div>
+              <div className="bg-white rounded-3xl shadow-2xl overflow-hidden h-full border border-gray-100">
+                <div className="relative h-2/3">
+                  <img
+                    src={card.plant.image}
+                    alt={card.plant.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 shadow-lg">
+                    <span className="text-purple-600 font-bold text-lg">{card.plant.match}%</span>
+                  </div>
+                  
+                  {/* Swipe indicators - only show on current card */}
+                  {card.zIndex === 10 && isDragging && (
+                    <>
+                      <div 
+                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
+                          dragOffset.x > 50 ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      >
+                        <div className="bg-green-500 text-white px-6 py-3 rounded-2xl font-bold text-xl transform rotate-12">
+                          LIKE
+                        </div>
+                      </div>
+                      <div 
+                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
+                          dragOffset.x < -50 ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      >
+                        <div className="bg-red-500 text-white px-6 py-3 rounded-2xl font-bold text-xl transform -rotate-12">
+                          PASS
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+                
+                <div className="p-6 h-1/3 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-800 mb-1">{card.plant.name}</h3>
+                    <p className="text-gray-500 italic mb-3">{card.plant.scientificName}</p>
+                    <p className="text-gray-600 text-sm mb-4">{card.plant.description}</p>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-2">
+                    {card.plant.reasons.slice(0, 3).map((reason) => (
+                      <span
+                        key={reason}
+                        className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full"
+                      >
+                        {reason}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
+          ))}
         </div>
 
         {/* Action Buttons */}
         <div className="flex justify-center gap-6">
           <button
             onClick={handleReject}
-            className="w-16 h-16 bg-white border-4 border-red-200 rounded-full flex items-center justify-center hover:border-red-300 hover:bg-red-50 transition-all duration-300 transform hover:scale-110 shadow-lg"
+            disabled={currentIndex >= plants.length}
+            className="w-16 h-16 bg-white border-4 border-red-200 rounded-full flex items-center justify-center hover:border-red-300 hover:bg-red-50 transition-all duration-300 transform hover:scale-110 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <X className="w-8 h-8 text-red-500" />
           </button>
           
           <button
             onClick={handleSelect}
-            className="w-16 h-16 bg-white border-4 border-green-200 rounded-full flex items-center justify-center hover:border-green-300 hover:bg-green-50 transition-all duration-300 transform hover:scale-110 shadow-lg"
+            disabled={currentIndex >= plants.length}
+            className="w-16 h-16 bg-white border-4 border-green-200 rounded-full flex items-center justify-center hover:border-green-300 hover:bg-green-50 transition-all duration-300 transform hover:scale-110 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Check className="w-8 h-8 text-green-500" />
           </button>
