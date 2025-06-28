@@ -29,7 +29,7 @@ export const AnswerPill: React.FC<AnswerPillProps> = ({
         relative w-full px-6 py-4 rounded-2xl border-2 transition-all duration-300 ease-out
         transform hover:scale-105 active:scale-95
         ${isSelected
-          ? 'bg-gradient-to-r from-emerald-500 to-green-500 border-emerald-500 text-white shadow-lg shadow-emerald-200'
+          ? 'bg-emerald-50 border-emerald-300 text-gray-900 shadow-md'
           : 'bg-white border-gray-200 text-gray-700 hover:border-emerald-300 hover:shadow-md'
         }
       `}
@@ -50,11 +50,11 @@ export const AnswerPill: React.FC<AnswerPillProps> = ({
             <div className={`
               w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200
               ${isSelected
-                ? 'bg-white/20'
+                ? 'bg-emerald-200'
                 : 'bg-emerald-100'
               }
             `}>
-              <IconComponent className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-emerald-600'}`} />
+              <IconComponent className={`w-4 h-4 ${isSelected ? 'text-emerald-700' : 'text-emerald-600'}`} />
             </div>
           ) : null}
           <span className="font-medium text-left">{label}</span>
@@ -64,11 +64,11 @@ export const AnswerPill: React.FC<AnswerPillProps> = ({
           <div className={`
             w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200
             ${isSelected
-              ? 'border-white bg-white'
+              ? 'border-emerald-600 bg-emerald-600'
               : 'border-gray-300'
             }
           `}>
-            {isSelected && <Check className="w-4 h-4 text-emerald-600" />}
+            {isSelected && <Check className="w-4 h-4 text-white" />}
           </div>
         )}
       </div>
