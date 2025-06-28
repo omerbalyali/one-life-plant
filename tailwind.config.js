@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'playwrite': ['"Playwrite India"', 'cursive'],
+        'playwrite': ['"Playwrite Norge"', 'cursive'],
       },
     },
   },
