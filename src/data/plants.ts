@@ -427,7 +427,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Lavender',
     scientificName: 'Lavandula angustifolia',
     match: 76,
-    image: 'https://images.pexels.com/photos/6208073/pexels-photo-6208073.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/164470/pexels-photo-164470.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Fragrant purple flowers', 'Natural aromatherapy', 'Attracts pollinators', 'Culinary herb'],
     description: 'A fragrant herb with purple flower spikes that provides natural aromatherapy and attracts bees.',
     location: 'both',
