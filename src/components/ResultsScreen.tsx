@@ -87,13 +87,13 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
         <div className="space-y-4">
           <button
             onClick={onRestart}
-            className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-semibold py-4 px-8 rounded-2xl hover:from-rose-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-rose-200 flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-4 px-8 rounded-2xl hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-purple-200 flex items-center justify-center gap-2"
           >
             <RefreshCw className="w-5 h-5" />
             Take Quiz Again
           </button>
           
-          <button className="w-full bg-white text-rose-500 font-semibold py-4 px-8 rounded-2xl border-2 border-rose-500 hover:bg-rose-50 transition-all duration-300 flex items-center justify-center gap-2">
+          <button className="w-full bg-white text-purple-600 font-semibold py-4 px-8 rounded-2xl border-2 border-purple-600 hover:bg-purple-50 transition-all duration-300 flex items-center justify-center gap-2">
             <Share2 className="w-5 h-5" />
             Share Results
           </button>
