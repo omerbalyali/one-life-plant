@@ -24,6 +24,17 @@ export const quizQuestions: QuizQuestion[] = [
       { id: 'direct', label: 'Direct Sunlight', value: 'direct' }
     ]
   },
+    {
+    id: 'experience',
+    title: 'What\'s your plant experience?',
+    subtitle: 'This helps us recommend the right difficulty level',
+    type: 'single',
+    answers: [
+      { id: 'beginner', label: 'Complete Beginner', value: 'beginner' },
+      { id: 'some', label: 'Some Experience', value: 'some' },
+      { id: 'experienced', label: 'Very Experienced', value: 'experienced' }
+    ]
+  },
   {
     id: 'maintenance',
     title: 'How much care can you provide?',
@@ -33,17 +44,6 @@ export const quizQuestions: QuizQuestion[] = [
       { id: 'low', label: 'Low Maintenance', value: 'low' },
       { id: 'medium', label: 'Medium Care', value: 'medium' },
       { id: 'high', label: 'High Maintenance', value: 'high' }
-    ]
-  },
-  {
-    id: 'experience',
-    title: 'What\'s your plant experience?',
-    subtitle: 'This helps us recommend the right difficulty level',
-    type: 'single',
-    answers: [
-      { id: 'beginner', label: 'Complete Beginner', value: 'beginner' },
-      { id: 'some', label: 'Some Experience', value: 'some' },
-      { id: 'experienced', label: 'Very Experienced', value: 'experienced' }
     ]
   },
   {
