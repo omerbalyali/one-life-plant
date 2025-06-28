@@ -108,13 +108,24 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
           return card;
         } else if (stackIndex === 0) {
           // Current card
+          let opacity = 1;
+          if (isDragging) {
+            // Only reduce opacity when card is far from center (almost out of area)
+            const cardWidth = 300; // Approximate card width
+            const threshold = cardWidth * 0.7; // Start fading when 70% out of view
+            const distance = Math.abs(dragOffset.x);
+            if (distance > threshold) {
+              opacity = Math.max(0.3, 1 - (distance - threshold) / (cardWidth * 0.3));
+            }
+          }
+          
           return {
             ...card,
             zIndex: 10,
             transform: isDragging 
               ? `translateX(${dragOffset.x}px) translateY(${dragOffset.y}px) rotate(${dragOffset.x * 0.1}deg)`
               : 'scale(1) translateY(0px)',
-            opacity: isDragging ? Math.max(0.7, 1 - Math.abs(dragOffset.x) / 300) : 1
+            opacity
           };
         } else {
           // Background cards
@@ -198,8 +209,8 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               isAnimating: true,
               animationType: direction === 'left' ? 'swipe-left' : 'swipe-right',
               transform: direction === 'left' 
-                ? 'translateX(-120vw) rotate(-30deg)' 
-                : 'translateX(120vw) rotate(30deg)',
+                ? 'translateX(-150vw) rotate(-30deg)' 
+                : 'translateX(150vw) rotate(30deg)',
               opacity: 0
             }
           : card
@@ -216,7 +227,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
       if (currentIndex + 1 >= plants.length) {
         setTimeout(() => setShowFinalSelection(true), 300);
       }
-    }, 600); // Slower animation duration
+    }, 900); // Even slower animation duration (was 600ms, now 900ms)
   };
 
   const handleSelect = () => {
@@ -386,7 +397,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               key={card.id}
               className={`absolute inset-0 ${
                 card.isAnimating 
-                  ? 'transition-all duration-[600ms] ease-out' 
+                  ? 'transition-all duration-[900ms] ease-out' 
                   : isDragging && card.zIndex === 10 
                     ? 'transition-none' 
                     : 'transition-all duration-300 ease-out'
