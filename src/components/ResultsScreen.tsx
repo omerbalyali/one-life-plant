@@ -14,7 +14,6 @@ interface CardState {
   animationType: 'swipe-left' | 'swipe-right' | 'none';
   transform: string;
   opacity: number;
-  isCurrentCard: boolean; // Add explicit current card flag
 }
 
 // Get quiz answers from localStorage or context
@@ -171,8 +170,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
         isAnimating: false,
         animationType: 'none' as const,
         transform: `scale(${1 - index * 0.05}) translateY(${index * 10}px)`,
-        opacity: index < 3 ? 1 : 0,
-        isCurrentCard: index === 0 // First card is current
+        opacity: index < 3 ? 1 : 0
       }));
       setCards(initialCards);
     }
@@ -182,24 +180,22 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     setCards(prevCards => {
       return prevCards.map((card, index) => {
         const stackIndex = index - currentIndex;
-        const isCurrentCard = stackIndex === 0 && !card.isAnimating;
         
         if (stackIndex < 0 || card.isAnimating) {
-          return {
-            ...card,
-            isCurrentCard: false
-          };
+          // Card has been processed or is animating - don't change it
+          return card;
         } else if (stackIndex === 0) {
+          // Current card - always full opacity, no transparency during drag
           return {
             ...card,
             zIndex: 10,
             transform: isDragging 
               ? `translateX(${dragOffset.x}px) translateY(${dragOffset.y}px) rotate(${dragOffset.x * 0.1}deg)`
               : 'scale(1) translateY(0px)',
-            opacity: 1,
-            isCurrentCard: true
+            opacity: 1
           };
         } else {
+          // Background cards - no transparency, just scaling and positioning
           const scale = 1 - Math.min(stackIndex, 3) * 0.05;
           const translateY = Math.min(stackIndex, 3) * 10;
           const opacity = stackIndex < 3 ? 1 : 0;
@@ -207,8 +203,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
             ...card,
             zIndex: 10 - stackIndex,
             transform: `scale(${scale}) translateY(${translateY}px)`,
-            opacity,
-            isCurrentCard: false
+            opacity
           };
         }
       });
@@ -221,8 +216,17 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     }
   }, [currentIndex, isDragging, dragOffset, isProcessing]);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (currentIndex >= plants.length || isProcessing) return;
+  // Simplified current card detection
+  const getCurrentCard = () => {
+    return cards.find((card, index) => index === currentIndex && !card.isAnimating);
+  };
+
+  const isCurrentCard = (cardIndex: number) => {
+    return cardIndex === currentIndex && !isProcessing && !cards[cardIndex]?.isAnimating;
+  };
+
+  const handleMouseDown = (e: React.MouseEvent, cardIndex: number) => {
+    if (!isCurrentCard(cardIndex)) return;
     e.preventDefault();
     setIsDragging(true);
     startPos.current = { x: e.clientX, y: e.clientY };
@@ -268,12 +272,11 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
     }
 
     const direction = action === 'select' ? 'right' : 'left';
-    const currentCard = cards.find(card => card.isCurrentCard);
-    if (!currentCard) return;
+    const currentCardId = plants[currentIndex].id;
 
     setCards(prevCards => 
       prevCards.map(card => 
-        card.id === currentCard.id
+        card.id === currentCardId
           ? {
               ...card,
               isAnimating: true,
@@ -281,8 +284,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
               transform: direction === 'left' 
                 ? 'translateX(-150vw) rotate(-30deg)' 
                 : 'translateX(150vw) rotate(30deg)',
-              opacity: 0,
-              isCurrentCard: false
+              opacity: 0
             }
           : card
       )
@@ -322,8 +324,7 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
         isAnimating: false,
         animationType: 'none' as const,
         transform: `scale(${1 - index * 0.05}) translateY(${index * 10}px)`,
-        opacity: index < 3 ? 1 : 0,
-        isCurrentCard: index === 0
+        opacity: index < 3 ? 1 : 0
       }));
       setCards(initialCards);
     } else {
@@ -480,97 +481,101 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
         </div>
 
         <div className="relative h-[600px] mb-8">
-          {cards.map((card) => (
-            <div
-              key={card.id}
-              className={`absolute inset-0 select-none ${
-                card.isAnimating 
-                  ? 'transition-all duration-[900ms] ease-out' 
-                  : isDragging && card.isCurrentCard 
-                    ? 'transition-none' 
-                    : 'transition-all duration-300 ease-out'
-              } ${
-                card.isCurrentCard && !card.isAnimating && !isProcessing ? 'cursor-grab active:cursor-grabbing' : ''
-              }`}
-              style={{
-                transform: card.transform,
-                opacity: card.opacity,
-                zIndex: card.zIndex,
-                userSelect: 'none',
-                WebkitUserSelect: 'none',
-                MozUserSelect: 'none',
-                msUserSelect: 'none'
-              }}
-              onMouseDown={card.isCurrentCard && !isProcessing ? handleMouseDown : undefined}
-              onMouseMove={card.isCurrentCard && !isProcessing ? handleMouseMove : undefined}
-              onMouseUp={card.isCurrentCard && !isProcessing ? handleMouseUp : undefined}
-              onMouseLeave={card.isCurrentCard && !isProcessing ? handleMouseUp : undefined}
-            >
-              <div className="bg-white rounded-3xl shadow-2xl overflow-hidden h-full border border-gray-100 select-none">
-                <div className="relative h-[58%]">
-                  <img
-                    src={card.plant.image}
-                    alt={card.plant.name}
-                    className="w-full h-full object-cover pointer-events-none select-none"
-                    draggable={false}
-                    style={{
-                      userSelect: 'none',
-                      WebkitUserSelect: 'none',
-                      MozUserSelect: 'none',
-                      msUserSelect: 'none',
-                      WebkitUserDrag: 'none',
-                      WebkitTouchCallout: 'none'
-                    }}
-                  />
-                  <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 shadow-lg pointer-events-none select-none">
-                    <span className="text-purple-600 font-bold text-lg">{card.plant.match}%</span>
+          {cards.map((card, cardIndex) => {
+            const isCurrentCardFlag = isCurrentCard(cardIndex);
+            
+            return (
+              <div
+                key={card.id}
+                className={`absolute inset-0 select-none ${
+                  card.isAnimating 
+                    ? 'transition-all duration-[900ms] ease-out' 
+                    : isDragging && isCurrentCardFlag 
+                      ? 'transition-none' 
+                      : 'transition-all duration-300 ease-out'
+                } ${
+                  isCurrentCardFlag && !card.isAnimating && !isProcessing ? 'cursor-grab active:cursor-grabbing' : ''
+                }`}
+                style={{
+                  transform: card.transform,
+                  opacity: card.opacity,
+                  zIndex: card.zIndex,
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  MozUserSelect: 'none',
+                  msUserSelect: 'none'
+                }}
+                onMouseDown={isCurrentCardFlag && !isProcessing ? (e) => handleMouseDown(e, cardIndex) : undefined}
+                onMouseMove={isCurrentCardFlag && !isProcessing ? handleMouseMove : undefined}
+                onMouseUp={isCurrentCardFlag && !isProcessing ? handleMouseUp : undefined}
+                onMouseLeave={isCurrentCardFlag && !isProcessing ? handleMouseUp : undefined}
+              >
+                <div className="bg-white rounded-3xl shadow-2xl overflow-hidden h-full border border-gray-100 select-none">
+                  <div className="relative h-[58%]">
+                    <img
+                      src={card.plant.image}
+                      alt={card.plant.name}
+                      className="w-full h-full object-cover pointer-events-none select-none"
+                      draggable={false}
+                      style={{
+                        userSelect: 'none',
+                        WebkitUserSelect: 'none',
+                        MozUserSelect: 'none',
+                        msUserSelect: 'none',
+                        WebkitUserDrag: 'none',
+                        WebkitTouchCallout: 'none'
+                      }}
+                    />
+                    <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 shadow-lg pointer-events-none select-none">
+                      <span className="text-purple-600 font-bold text-lg">{card.plant.match}%</span>
+                    </div>
+                    
+                    {isCurrentCardFlag && isDragging && !isProcessing && (
+                      <>
+                        <div 
+                          className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 pointer-events-none select-none ${
+                            dragOffset.x > 50 ? 'opacity-100' : 'opacity-0'
+                          }`}
+                        >
+                          <div className="bg-green-500 text-white px-8 py-6 rounded-2xl font-bold text-4xl transform rotate-12 select-none">
+                            LIKE
+                          </div>
+                        </div>
+                        <div 
+                          className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 pointer-events-none select-none ${
+                            dragOffset.x < -50 ? 'opacity-100' : 'opacity-0'
+                          }`}
+                        >
+                          <div className="bg-red-500 text-white px-8 py-6 rounded-2xl font-bold text-4xl transform -rotate-12 select-none">
+                            PASS
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                   
-                  {card.isCurrentCard && isDragging && !isProcessing && (
-                    <>
-                      <div 
-                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 pointer-events-none select-none ${
-                          dragOffset.x > 50 ? 'opacity-100' : 'opacity-0'
-                        }`}
-                      >
-                        <div className="bg-green-500 text-white px-8 py-6 rounded-2xl font-bold text-4xl transform rotate-12 select-none">
-                          LIKE
-                        </div>
-                      </div>
-                      <div 
-                        className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 pointer-events-none select-none ${
-                          dragOffset.x < -50 ? 'opacity-100' : 'opacity-0'
-                        }`}
-                      >
-                        <div className="bg-red-500 text-white px-8 py-6 rounded-2xl font-bold text-4xl transform -rotate-12 select-none">
-                          PASS
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-                
-                <div className="p-6 h-[42%] flex flex-col justify-between select-none">
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-0.5 select-none">{card.plant.name}</h3>
-                    <p className="text-gray-500 italic mb-3 select-none">{card.plant.scientificName}</p>
-                    <p className="text-gray-600 text-sm mb-4 select-none">{card.plant.description}</p>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2 select-none">
-                    {card.plant.reasons.slice(0, 3).map((reason) => (
-                      <span
-                        key={reason}
-                        className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full select-none"
-                      >
-                        {reason}
-                      </span>
-                    ))}
+                  <div className="p-6 h-[42%] flex flex-col justify-between select-none">
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-800 mb-0.5 select-none">{card.plant.name}</h3>
+                      <p className="text-gray-500 italic mb-3 select-none">{card.plant.scientificName}</p>
+                      <p className="text-gray-600 text-sm mb-4 select-none">{card.plant.description}</p>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2 select-none">
+                      {card.plant.reasons.slice(0, 3).map((reason) => (
+                        <span
+                          key={reason}
+                          className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-full select-none"
+                        >
+                          {reason}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="flex justify-center gap-6">
