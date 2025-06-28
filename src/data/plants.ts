@@ -196,7 +196,7 @@ export const plantsDatabase: Plant[] = [
     name: 'Aloe Vera',
     scientificName: 'Aloe barbadensis',
     match: 89,
-    image: 'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/579472/pexels-photo-579472.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Medicinal healing gel', 'Drought tolerant succulent', 'Produces baby plants', 'Perfect for sunny spots'],
     description: 'A practical succulent with healing properties that thrives in bright light with minimal water.',
     location: 'both',
