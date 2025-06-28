@@ -861,17 +861,17 @@ export const ResultsScreen: React.FC<ResultsScreenProps> = ({ onRestart }) => {
           <button
             onClick={handleReject}
             disabled={currentIndex >= plants.length || isProcessing}
-            className="w-16 h-16 bg-white border-4 border-red-200 rounded-full flex items-center justify-center hover:border-red-300 hover:bg-red-50 transition-all duration-300 transform hover:scale-110 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-all duration-300 transform hover:scale-110 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            <X className="w-8 h-8 text-red-500" />
+            <X className="w-8 h-8 text-white" />
           </button>
           
           <button
             onClick={handleSelect}
             disabled={currentIndex >= plants.length || isProcessing}
-            className="w-16 h-16 bg-white border-4 border-green-200 rounded-full flex items-center justify-center hover:border-green-300 hover:bg-green-50 transition-all duration-300 transform hover:scale-110 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-all duration-300 transform hover:scale-110 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            <Check className="w-8 h-8 text-green-500" />
+            <Check className="w-8 h-8 text-white" />
           </button>
         </div>
 
