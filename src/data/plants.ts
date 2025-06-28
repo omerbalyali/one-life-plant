@@ -403,10 +403,10 @@ export const plantsDatabase: Plant[] = [
   },
   {
     id: '19',
-    name: 'Monstera Adansonii',
+    name: 'Adanson\'s Monstera',
     scientificName: 'Monstera adansonii',
     match: 87,
-    image: 'https://images.pexels.com/photos/6208074/pexels-photo-6208074.jpeg?auto=compress&cs=tinysrgb&w=600',
+    image: 'https://images.pexels.com/photos/32286095/pexels-photo-32286095.jpeg?auto=compress&cs=tinysrgb&w=600',
     reasons: ['Swiss cheese holes', 'Compact climbing vine', 'Fenestrated leaves', 'Tropical beauty'],
     description: 'The "Swiss Cheese Vine" with naturally occurring holes in its leaves and compact growth.',
     location: 'indoor',
